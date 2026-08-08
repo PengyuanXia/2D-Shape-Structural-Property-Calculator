@@ -15,13 +15,27 @@ Instantly generate standard structural shapes using default dimensions or config
 * **Circular Tube**: Outer Radius ($R$) and Inner Radius ($r$).
 * **L-Angle**: Vertical Leg Height ($H$), Vertical Leg Thickness ($t_v$), Horizontal Leg Width ($B$), and Horizontal Leg Thickness ($t_h$).
 
-### 2. Manual Coordinate Drafting
-Create completely custom, complex geometries:
-* Enter exact decimal coordinate offsets $(X, Y)$ using the manual inputs sidebar.
-* Supports the creation of an outer perimeter and multiple independent, nested subtractive internal holes.
-* Validates shapes in real-time (preventing intersecting holes, self-crossings, and out-of-boundary shapes).
+### 2. Interactive CAD Viewport & Click-to-Draw
+* **Left-Click to Draw**: Click directly on the grid to place vertices. Points snap to the nearest integer grid coordinate for precision.
+* **Mouse Panning & Zooming**: Drag with the cursor to pan the view smoothly (without placing points). Scroll the wheel to zoom centered on your cursor.
+* **Fit Shape**: Fit the drawn boundaries to the screen automatically with optimized margins.
+* **Manual Inputs**: Manually enter decimal $X$ and $Y$ coordinates and click "Close Loop" to define complex boundaries.
 
-### 3. Real-Time Structural Solvers
+### 3. Dynamic Axis Control (HUD Toggles)
+* **Axis Direction Panel**: Located in the top-left corner of the canvas. Invert axes on-the-fly to support different student curriculum layouts:
+  * **Reverse X-Axis**: Makes positive $X$ extend to the left.
+  * **Reverse Y-Axis**: Makes positive $Y$ extend upwards (Cartesian style) rather than downwards (standard screen style).
+* **Reference Axes Note**: Located in the top-right corner. Explains that moments of inertia ($I_x, I_y$) are derived about the reference axes ($x=0, y=0$) aligned with the top-most fiber. Fully dismissible with a close button.
+
+### 4. Smart Undo Engine
+* Popping points or reverting closed boundaries is supported.
+* **Undo Trigger**: Click the **Undo** button in the sidebar or use the standard **`Ctrl + Z`** (or **`Cmd + Z`**) keyboard shortcut.
+* **Intelligent Stack Rollback**:
+  * Removes the last point of the current path in progress.
+  * If the path is empty, it reverts the last completed hole back into active editing mode.
+  * If no holes exist, it uncloses the outer boundary back to perimeter drafting mode.
+
+### 5. Real-Time Structural Solvers
 * **Geometric Properties**: Area ($A$), Centroid coordinates $(\bar{x}, \bar{y})$, and Product of Inertia ($I_{xy}$).
 * **Reference Inertia ($I_x, I_y$)**: Calculated directly about the reference coordinate axes ($x=0$, $y=0$ aligned at the top-most fiber of the shape).
 * **Principal Properties**: Maximum ($I_1$) and Minimum ($I_2$) Principal Moments of Inertia, along with the Principal Rotation Angle ($\theta_p$).
@@ -30,10 +44,10 @@ Create completely custom, complex geometries:
   * **Plastic Neutral Axis (PNA)**: Rotates coordinates and uses a bisection search coupled with Sutherland-Hodgman polygon clipping to find the line splitting the net section area in half.
 * **Cross-Section Core (Kern)**: Solves half-plane boundary constraints $(u_i / r_v^2) e_u + (v_i / r_u^2) e_v + 1 \ge 0$ for all boundary vertices in centroidal principal coordinates to map the elastic Kern area.
 
-### 4. Interactive CAD Viewport
-* **Navigation**: Drag to pan (Right-Click, Middle-Click, or Shift+Left-Click) and scroll wheel (or toolbar `+` / `-` buttons) to zoom.
-* **Fit Shape**: Clicking **Fit Shape** automatically zooms and centers the active cross-section with clean margins.
-* **Layer Toggles**: Individually show/hide gridlines, snap-to-grid, centroid axes, principal axes, ENA/PNA lines, and the Kern polygon.
+### 6. Theme Integration & Layout
+* **Adaptive Theme Support**: Toggles between Daytime (Light mode) and Nighttime (Dark mode, default).
+* **High Contrast Dashboard**: Values render in bright white during night mode and solid black during daytime mode for perfect readability.
+* **Compact Header Info**: Real-time cursor coordinates (`X: 0.0, Y: 0.0`) are docked right next to the **Snap to Grid** checkbox.
 
 ---
 
@@ -50,7 +64,7 @@ Create completely custom, complex geometries:
 Since this is a static client-side web application, you do not need to install complex databases or backends.
 
 1. Clone or download this project directory.
-2. Run a simple local HTTP server (to ensure correct ES module loading if needed):
+2. Run a simple local HTTP server:
    ```bash
    # Using Python 3
    python -m http.server 8080
