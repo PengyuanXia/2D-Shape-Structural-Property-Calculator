@@ -14,10 +14,12 @@ const state = {
   // Visual Toggles
   showCentroid: true,
   showPrincipal: true,
-  showENA: true,
-  showPNA: true,
-  showKern: true,
+  showENA: false,
+  showPNA: false,
+  showKern: false,
   gridSnap: true,
+  reverseX: false,
+  reverseY: false,
   
   // Canvas View State
   zoom: 2.0, // Pixels per unit
@@ -33,7 +35,7 @@ const state = {
 };
 
 // --- CONSTANTS ---
-const SNAP_GRID_SIZE = 10; // snap distance in grid units
+const SNAP_GRID_SIZE = 1; // snap distance in grid units
 const POINT_RADIUS_PX = 6;
 const CLOSE_PX_LIMIT = 12; // click close to first vertex to close loop
 
@@ -42,8 +44,6 @@ const canvas = document.getElementById('viewport-canvas');
 const ctx = canvas.getContext('2d');
 const container = document.getElementById('canvas-viewport-container');
 const cursorDisplay = document.getElementById('cursor-pos');
-const instructionsOverlay = document.getElementById('drawing-instructions');
-const btnCloseOverlay = document.getElementById('btn-close-overlay');
 
 // Controls
 const btnThemeToggle = document.getElementById('btn-theme-toggle');
@@ -51,6 +51,7 @@ const btnDrawOuter = document.getElementById('tool-draw-outer');
 const btnDrawHole = document.getElementById('tool-draw-hole');
 const btnClearCurrent = document.getElementById('btn-clear-current');
 const btnResetAll = document.getElementById('btn-reset-all');
+const btnUndo = document.getElementById('btn-undo');
 const toggleGridSnap = document.getElementById('toggle-grid-snap');
 const btnZoomIn = document.getElementById('btn-zoom-in');
 const btnZoomOut = document.getElementById('btn-zoom-out');
@@ -62,6 +63,8 @@ const chkPrincipal = document.getElementById('toggle-principal');
 const chkEna = document.getElementById('toggle-ena');
 const chkPna = document.getElementById('toggle-pna');
 const chkKern = document.getElementById('toggle-kern');
+const toggleReverseX = document.getElementById('toggle-reverse-x');
+const toggleReverseY = document.getElementById('toggle-reverse-y');
 
 // Accordions
 const outerCoordsList = document.getElementById('list-outer-coords');
@@ -953,18 +956,22 @@ function validateNewHole(holeVertices, outer, existingHoles) {
 function gridToCanvas(x, y) {
   const cx = canvas.width / 2;
   const cy = canvas.height / 2;
+  const multX = state.reverseX ? -1 : 1;
+  const multY = state.reverseY ? -1 : 1;
   return {
-    x: cx + state.panX + x * state.zoom,
-    y: cy + state.panY + y * state.zoom
+    x: cx + state.panX + x * state.zoom * multX,
+    y: cy + state.panY + y * state.zoom * multY
   };
 }
 
 function canvasToGrid(cx, cy) {
   const centerX = canvas.width / 2;
   const centerY = canvas.height / 2;
+  const multX = state.reverseX ? -1 : 1;
+  const multY = state.reverseY ? -1 : 1;
   return {
-    x: (cx - centerX - state.panX) / state.zoom,
-    y: (cy - centerY - state.panY) / state.zoom
+    x: ((cx - centerX - state.panX) / state.zoom) * multX,
+    y: ((cy - centerY - state.panY) / state.zoom) * multY
   };
 }
 
@@ -1495,10 +1502,11 @@ function updateCloseLoopButtonState() {
   }
 }
 
-// --- INTERACTIVE MOUSE / TOUCH EVENTS ---
-
 function setupCanvasEvents() {
-  
+  let hasDragged = false;
+  let startX = 0;
+  let startY = 0;
+
   // Track pointer movements for coordinates display
   canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
@@ -1512,10 +1520,12 @@ function setupCanvasEvents() {
       gridPt.y = Math.round(gridPt.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
     }
 
-    cursorDisplay.textContent = `X: ${gridPt.x.toFixed(0)}, Y: ${gridPt.y.toFixed(0)}`;
+    cursorDisplay.textContent = `X: ${gridPt.x.toFixed(1)}, Y: ${gridPt.y.toFixed(1)}`;
 
-    // Handle viewport panning
     if (state.isPanning) {
+      if (Math.hypot(e.clientX - startX, e.clientY - startY) > 5) {
+        hasDragged = true;
+      }
       const dx = e.clientX - state.dragStartX;
       const dy = e.clientY - state.dragStartY;
       state.panX += dx;
@@ -1527,17 +1537,42 @@ function setupCanvasEvents() {
   });
 
   canvas.addEventListener('mousedown', (e) => {
-    // Middle-click (1) or Right-click (2) or Shift+Left-click (0 + Shift) pans
+    startX = e.clientX;
+    startY = e.clientY;
+    hasDragged = false;
+
+    // Middle-click (1), Right-click (2), Shift+Left-click (0 + Shift), or standard Left-click (0) to pan
     if (e.button === 1 || e.button === 2 || (e.button === 0 && e.shiftKey)) {
       state.isPanning = true;
       state.dragStartX = e.clientX;
       state.dragStartY = e.clientY;
       e.preventDefault();
+    } else if (e.button === 0) {
+      // Allow regular left click drag to pan the grid, but if they click without dragging, it places a point!
+      state.isPanning = true;
+      state.dragStartX = e.clientX;
+      state.dragStartY = e.clientY;
     }
   });
 
-  window.addEventListener('mouseup', () => {
-    state.isPanning = false;
+  window.addEventListener('mouseup', (e) => {
+    if (state.isPanning) {
+      state.isPanning = false;
+      // If it was a clean left click (button 0, no shift key) on the canvas, and we did not drag
+      if (!hasDragged && e.button === 0 && !e.shiftKey && e.target === canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        let gridPt = canvasToGrid(mx, my);
+
+        if (state.gridSnap) {
+          gridPt.x = Math.round(gridPt.x / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+          gridPt.y = Math.round(gridPt.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+        }
+
+        handleDrawingPlacement(gridPt);
+      }
+    }
   });
 
   // Block context menu so right-click pan works cleanly
@@ -1559,8 +1594,10 @@ function setupCanvasEvents() {
     // Shift pan offset to preserve cursor grid position after zoom
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
-    state.panX = mx - cx - gridPtBefore.x * state.zoom;
-    state.panY = my - cy - gridPtBefore.y * state.zoom;
+    const multX = state.reverseX ? -1 : 1;
+    const multY = state.reverseY ? -1 : 1;
+    state.panX = mx - cx - gridPtBefore.x * state.zoom * multX;
+    state.panY = my - cy - gridPtBefore.y * state.zoom * multY;
 
     draw();
     e.preventDefault();
@@ -1583,9 +1620,6 @@ function handleDrawingPlacement(pt) {
       if (dist < CLOSE_PX_LIMIT) {
         state.outerClosed = true;
         shiftShapeToTop();
-        // Clean instruction cards
-        instructionsOverlay.style.opacity = 0;
-        instructionsOverlay.style.pointerEvents = 'none';
         
         btnDrawHole.disabled = false;
         state.drawingMode = 'HOLE';
@@ -1602,7 +1636,6 @@ function handleDrawingPlacement(pt) {
     const duplicate = state.outerBoundary.some(v => v.x === pt.x && v.y === pt.y);
     if (!duplicate) {
       state.outerBoundary.push(pt);
-      closeOverlay();
       updateCoordsLists();
       draw();
     }
@@ -1656,12 +1689,6 @@ document.body.addEventListener('click', (e) => {
     btnDrawHole.classList.remove('active');
     btnDrawOuter.classList.add('active');
     state.drawingMode = 'OUTER';
-    
-    // Bring instructions overlay back
-    if (state.outerBoundary.length === 0 && !state.welcomeDismissed) {
-      instructionsOverlay.style.opacity = 1;
-      instructionsOverlay.style.pointerEvents = 'auto';
-    }
   } else if (type === 'hole') {
     state.holes.splice(index, 1);
   }
@@ -1720,11 +1747,6 @@ btnResetAll.addEventListener('click', () => {
   state.holes = [];
   state.activeHole = [];
   state.drawingMode = 'OUTER';
-  
-  if (!state.welcomeDismissed) {
-    instructionsOverlay.style.opacity = 1;
-    instructionsOverlay.style.pointerEvents = 'auto';
-  }
   btnDrawHole.disabled = true;
   btnDrawHole.classList.remove('active');
   btnDrawOuter.classList.add('active');
@@ -1757,12 +1779,14 @@ btnFitZoom.addEventListener('click', () => {
   const zoomY = (canvas.height - 120) / (H > 0 ? H : 10);
   state.zoom = Math.max(0.5, Math.min(25.0, Math.min(zoomX, zoomY))) / 1.5;
 
-  // Center on composite bounding center
-  const targetCX = (minX + maxX) / 2;
-  const targetCY = (minY + maxY) / 2;
-  
-  state.panX = -targetCX * state.zoom;
-  state.panY = -targetCY * state.zoom;
+    // Center on composite bounding center
+    const targetCX = (minX + maxX) / 2;
+    const targetCY = (minY + maxY) / 2;
+    
+    const multX = state.reverseX ? -1 : 1;
+    const multY = state.reverseY ? -1 : 1;
+    state.panX = -targetCX * state.zoom * multX;
+    state.panY = -targetCY * state.zoom * multY;
 
   draw();
 });
@@ -1806,6 +1830,19 @@ chkEna.addEventListener('change', e => { state.showENA = e.target.checked; draw(
 chkPna.addEventListener('change', e => { state.showPNA = e.target.checked; draw(); });
 chkKern.addEventListener('change', e => { state.showKern = e.target.checked; draw(); });
 
+if (toggleReverseX) {
+  toggleReverseX.addEventListener('change', e => {
+    state.reverseX = e.target.checked;
+    draw();
+  });
+}
+if (toggleReverseY) {
+  toggleReverseY.addEventListener('change', e => {
+    state.reverseY = e.target.checked;
+    draw();
+  });
+}
+
 // Light/Dark Theme toggle trigger
 btnThemeToggle.addEventListener('click', () => {
   const body = document.body;
@@ -1838,9 +1875,6 @@ function loadPreset(outerPoints, holesList) {
   btnDrawHole.classList.add('active');
   btnDrawOuter.classList.remove('active');
   state.drawingMode = 'HOLE';
-  
-  instructionsOverlay.style.opacity = 0;
-  instructionsOverlay.style.pointerEvents = 'none';
 
   // Open both accordions
   document.getElementById('header-outer-coords').parentElement.classList.add('expanded');
@@ -1960,21 +1994,9 @@ function init() {
 // Fire initialization
 init();
 
-// Welcome Screen Overlay Close Event Handlers
-function closeOverlay() {
-  state.welcomeDismissed = true;
-  if (instructionsOverlay) {
-    instructionsOverlay.style.opacity = 0;
-    instructionsOverlay.style.pointerEvents = 'none';
-  }
-}
-
-if (btnCloseOverlay) {
-  btnCloseOverlay.addEventListener('click', closeOverlay);
-}
+// Close Modal on Escape
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    closeOverlay();
     closePresetModal();
   }
 });
@@ -2034,8 +2056,6 @@ if (btnManualClose) {
       if (state.outerBoundary.length < 3 || state.outerClosed) return;
       state.outerClosed = true;
       shiftShapeToTop();
-      instructionsOverlay.style.opacity = 0;
-      instructionsOverlay.style.pointerEvents = 'none';
       
       btnDrawHole.disabled = false;
       state.drawingMode = 'HOLE';
@@ -2069,3 +2089,49 @@ if (btnCloseAxesNote && refAxesNotePanel) {
     refAxesNotePanel.style.pointerEvents = 'none';
   });
 }
+
+// --- UNDO ENGINE ---
+
+function undo() {
+  if (state.drawingMode === 'HOLE') {
+    if (state.activeHole.length > 0) {
+      // 1. Remove last point of current hole in progress
+      state.activeHole.pop();
+    } else if (state.holes.length > 0) {
+      // 2. Revert the last completed hole back to active drawing state
+      state.activeHole = state.holes.pop();
+    } else {
+      // 3. Revert back to outer drawing mode
+      state.outerClosed = false;
+      state.drawingMode = 'OUTER';
+      btnDrawHole.disabled = true;
+      btnDrawHole.classList.remove('active');
+      btnDrawOuter.classList.add('active');
+    }
+  } else if (state.drawingMode === 'OUTER') {
+    if (state.outerClosed) {
+      state.outerClosed = false;
+    } else if (state.outerBoundary.length > 0) {
+      // 4. Remove last point of outer boundary
+      state.outerBoundary.pop();
+    }
+  }
+
+  updateCoordsLists();
+  draw();
+}
+
+if (btnUndo) {
+  btnUndo.addEventListener('click', undo);
+}
+
+// Bind Ctrl+Z global shortcut
+window.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+    if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+      return; // Let standard text undo work inside inputs
+    }
+    e.preventDefault();
+    undo();
+  }
+});
