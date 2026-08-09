@@ -1627,7 +1627,7 @@ function handleDrawingPlacement(pt) {
         btnDrawOuter.classList.remove('active');
         
         updateCoordsLists();
-        draw();
+        btnFitZoom.click();
         return;
       }
     }
@@ -1728,10 +1728,6 @@ btnClearCurrent.addEventListener('click', () => {
   if (state.drawingMode === 'OUTER') {
     state.outerBoundary = [];
     state.outerClosed = false;
-    if (!state.welcomeDismissed) {
-      instructionsOverlay.style.opacity = 1;
-      instructionsOverlay.style.pointerEvents = 'auto';
-    }
     btnDrawHole.disabled = true;
   } else {
     state.activeHole = [];
@@ -1747,6 +1743,7 @@ btnResetAll.addEventListener('click', () => {
   state.holes = [];
   state.activeHole = [];
   state.drawingMode = 'OUTER';
+  
   btnDrawHole.disabled = true;
   btnDrawHole.classList.remove('active');
   btnDrawOuter.classList.add('active');
@@ -2061,6 +2058,10 @@ if (btnManualClose) {
       state.drawingMode = 'HOLE';
       btnDrawHole.classList.add('active');
       btnDrawOuter.classList.remove('active');
+
+      updateCoordsLists();
+      btnFitZoom.click();
+      return;
     } else if (state.drawingMode === 'HOLE') {
       if (state.activeHole.length < 3 || !state.outerClosed) return;
       
