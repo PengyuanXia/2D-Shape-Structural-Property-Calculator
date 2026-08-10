@@ -22,9 +22,9 @@ Instantly generate standard structural shapes using default dimensions or config
 * **Manual Inputs**: Manually enter decimal $X$ and $Y$ coordinates and click "Close Loop" to define complex boundaries.
 
 ### 3. Dynamic Axis Control (HUD Toggles)
-* **Axis Direction Panel**: Located in the top-left corner of the canvas. Invert axes on-the-fly to support different student curriculum layouts:
-  * **Reverse X-Axis**: Makes positive $X$ extend to the left.
-  * **Reverse Y-Axis**: Makes positive $Y$ extend upwards (Cartesian style) rather than downwards (standard screen style).
+* **Axis Direction Panel**: Located in the top-left corner of the canvas. Defaults to standard Cartesian orientation (**Positive X to the right**, **Positive Y upwards**):
+  * **Reverse X-Axis**: Toggle to extend positive $X$ to the left.
+  * **Reverse Y-Axis (+ Up)**: Checked by default (positive $Y$ extends upwards). Uncheck to extend positive $Y$ downwards (screen style).
 * **Reference Axes Note**: Located in the top-right corner. Explains that moments of inertia ($I_x, I_y$) are derived about the reference axes ($x=0, y=0$) aligned with the top-most fiber. Fully dismissible with a close button.
 
 ### 4. Smart Undo Engine

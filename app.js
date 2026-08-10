@@ -19,7 +19,7 @@ const state = {
   showKern: false,
   gridSnap: true,
   reverseX: false,
-  reverseY: false,
+  reverseY: true,
   
   // Canvas View State
   zoom: 2.0, // Pixels per unit
@@ -1836,7 +1836,11 @@ if (toggleReverseX) {
 if (toggleReverseY) {
   toggleReverseY.addEventListener('change', e => {
     state.reverseY = e.target.checked;
-    draw();
+    if (state.outerBoundary.length > 0) {
+      btnFitZoom.click();
+    } else {
+      draw();
+    }
   });
 }
 
