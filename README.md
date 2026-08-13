@@ -1,5 +1,7 @@
 # 2D Section Property Calculator (SecCalc)
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/pengyuanxia)
+
 A premium, interactive CAD web application designed for civil, structural, and mechanical engineers to calculate, visualize, and analyze the geometric and structural properties of any 2D cross-section.
 
 ---

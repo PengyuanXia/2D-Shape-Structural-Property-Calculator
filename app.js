@@ -31,6 +31,7 @@ const state = {
   
   // Themes
   theme: 'dark',
+  lang: 'en',
   welcomeDismissed: false
 };
 
@@ -104,10 +105,10 @@ let currentSelectedShape = null;
 
 const shapeConfigurations = {
   rect: {
-    title: "Rectangle Settings",
+    titleKey: 'preset.rect.title',
     fields: [
-      { id: 'rect-w', label: 'Width (b)', type: 'number', default: 100 },
-      { id: 'rect-h', label: 'Height (h)', type: 'number', default: 80 }
+      { id: 'rect-w', labelKey: 'field.width', type: 'number', default: 100 },
+      { id: 'rect-h', labelKey: 'field.height', type: 'number', default: 80 }
     ],
     generateDefault: () => {
       return {
@@ -124,7 +125,7 @@ const shapeConfigurations = {
       const w = values['rect-w'];
       const h = values['rect-h'];
       if (w <= 0 || h <= 0) {
-        alert("Dimensions must be positive values.");
+        alert(t('alert.dimPositive'));
         return null;
       }
       return {
@@ -139,12 +140,12 @@ const shapeConfigurations = {
     }
   },
   'hollow-rect': {
-    title: "Box Section Settings",
+    titleKey: 'preset.hollowRect.title',
     fields: [
-      { id: 'box-W', label: 'Outer Width (B)', type: 'number', default: 120 },
-      { id: 'box-H', label: 'Outer Height (H)', type: 'number', default: 100 },
-      { id: 'box-w', label: 'Inner Width (b)', type: 'number', default: 80 },
-      { id: 'box-h', label: 'Inner Height (h)', type: 'number', default: 60 }
+      { id: 'box-W', labelKey: 'field.outerWidth', type: 'number', default: 120 },
+      { id: 'box-H', labelKey: 'field.outerHeight', type: 'number', default: 100 },
+      { id: 'box-w', labelKey: 'field.innerWidth', type: 'number', default: 80 },
+      { id: 'box-h', labelKey: 'field.innerHeight', type: 'number', default: 60 }
     ],
     generateDefault: () => {
       return {
@@ -169,11 +170,11 @@ const shapeConfigurations = {
       const h = values['box-h'];
       
       if (W <= 0 || H <= 0 || w <= 0 || h <= 0) {
-        alert("Dimensions must be positive values.");
+        alert(t('alert.dimPositive'));
         return null;
       }
       if (w >= W || h >= H) {
-        alert("Inner dimensions (b, h) must be strictly smaller than outer dimensions (B, H).");
+        alert(t('alert.innerSmaller'));
         return null;
       }
       
@@ -194,14 +195,14 @@ const shapeConfigurations = {
     }
   },
   'i-beam': {
-    title: "I-Beam Settings",
+    titleKey: 'preset.iBeam.title',
     fields: [
-      { id: 'ib-H', label: 'Overall Height (H)', type: 'number', default: 120 },
-      { id: 'ib-tw', label: 'Web Width (tw)', type: 'number', default: 20 },
-      { id: 'ib-bft', label: 'Top Flange Width (bft)', type: 'number', default: 100 },
-      { id: 'ib-tft', label: 'Top Flange Thickness (tft)', type: 'number', default: 15 },
-      { id: 'ib-bfb', label: 'Bottom Flange Width (bfb)', type: 'number', default: 100 },
-      { id: 'ib-tfb', label: 'Bottom Flange Thickness (tfb)', type: 'number', default: 15 }
+      { id: 'ib-H', labelKey: 'field.overallHeight', type: 'number', default: 120 },
+      { id: 'ib-tw', labelKey: 'field.webWidth', type: 'number', default: 20 },
+      { id: 'ib-bft', labelKey: 'field.topFlangeWidth', type: 'number', default: 100 },
+      { id: 'ib-tft', labelKey: 'field.topFlangeThickness', type: 'number', default: 15 },
+      { id: 'ib-bfb', labelKey: 'field.botFlangeWidth', type: 'number', default: 100 },
+      { id: 'ib-tfb', labelKey: 'field.botFlangeThickness', type: 'number', default: 15 }
     ],
     generateDefault: () => {
       return {
@@ -231,16 +232,16 @@ const shapeConfigurations = {
       const tfb = values['ib-tfb'];
       
       if (H <= 0 || tw <= 0 || bft <= 0 || tft <= 0 || bfb <= 0 || tfb <= 0) {
-        alert("Dimensions must be positive values.");
+        alert(t('alert.dimPositive'));
         return null;
       }
       const hw = H - tft - tfb;
       if (hw <= 0) {
-        alert("Flange thicknesses combined cannot exceed overall height.");
+        alert(t('alert.flangeExceed'));
         return null;
       }
       if (tw >= bft || tw >= bfb) {
-        alert("Web width must be smaller than flange widths.");
+        alert(t('alert.webSmallerFlanges'));
         return null;
       }
       
@@ -264,12 +265,12 @@ const shapeConfigurations = {
     }
   },
   't-beam': {
-    title: "T-Beam Settings",
+    titleKey: 'preset.tBeam.title',
     fields: [
-      { id: 'tb-bf', label: 'Flange Width (bf)', type: 'number', default: 100 },
-      { id: 'tb-tf', label: 'Flange Thickness (tf)', type: 'number', default: 15 },
-      { id: 'tb-hw', label: 'Web Height (hw)', type: 'number', default: 90 },
-      { id: 'tb-tw', label: 'Web Width (tw)', type: 'number', default: 20 }
+      { id: 'tb-bf', labelKey: 'field.flangeWidth', type: 'number', default: 100 },
+      { id: 'tb-tf', labelKey: 'field.flangeThickness', type: 'number', default: 15 },
+      { id: 'tb-hw', labelKey: 'field.webHeight', type: 'number', default: 90 },
+      { id: 'tb-tw', labelKey: 'field.webWidth', type: 'number', default: 20 }
     ],
     generateDefault: () => {
       return {
@@ -293,11 +294,11 @@ const shapeConfigurations = {
       const tw = values['tb-tw'];
       
       if (bf <= 0 || tf <= 0 || hw <= 0 || tw <= 0) {
-        alert("Dimensions must be positive values.");
+        alert(t('alert.dimPositive'));
         return null;
       }
       if (tw >= bf) {
-        alert("Web width must be smaller than flange width.");
+        alert(t('alert.webSmallerFlange'));
         return null;
       }
       
@@ -319,10 +320,10 @@ const shapeConfigurations = {
     }
   },
   circular: {
-    title: "Circular Tube Settings",
+    titleKey: 'preset.circular.title',
     fields: [
-      { id: 'circ-R', label: 'Outer Radius (R)', type: 'number', default: 60 },
-      { id: 'circ-r', label: 'Inner Radius (r)', type: 'number', default: 40 }
+      { id: 'circ-R', labelKey: 'field.outerRadius', type: 'number', default: 60 },
+      { id: 'circ-r', labelKey: 'field.innerRadius', type: 'number', default: 40 }
     ],
     generateDefault: () => {
       const outer = [];
@@ -343,11 +344,11 @@ const shapeConfigurations = {
       const R = values['circ-R'];
       const r = values['circ-r'];
       if (R <= 0 || r <= 0) {
-        alert("Radii must be positive values.");
+        alert(t('alert.radiiPositive'));
         return null;
       }
       if (r >= R) {
-        alert("Inner radius must be strictly smaller than outer radius.");
+        alert(t('alert.innerRadiusSmaller'));
         return null;
       }
       const outer = [];
@@ -366,12 +367,12 @@ const shapeConfigurations = {
     }
   },
   'l-angle': {
-    title: "L-Angle Settings",
+    titleKey: 'preset.lAngle.title',
     fields: [
-      { id: 'la-H', label: 'Vertical Leg Height (H)', type: 'number', default: 80 },
-      { id: 'la-tv', label: 'Vertical Leg Thickness (tv)', type: 'number', default: 20 },
-      { id: 'la-B', label: 'Horizontal Leg Width (B)', type: 'number', default: 80 },
-      { id: 'la-th', label: 'Horizontal Leg Thickness (th)', type: 'number', default: 20 }
+      { id: 'la-H', labelKey: 'field.vertLegHeight', type: 'number', default: 80 },
+      { id: 'la-tv', labelKey: 'field.vertLegThick', type: 'number', default: 20 },
+      { id: 'la-B', labelKey: 'field.horizLegWidth', type: 'number', default: 80 },
+      { id: 'la-th', labelKey: 'field.horizLegThick', type: 'number', default: 20 }
     ],
     generateDefault: () => {
       return {
@@ -393,11 +394,11 @@ const shapeConfigurations = {
       const th = values['la-th'];
       
       if (H <= 0 || tv <= 0 || B <= 0 || th <= 0) {
-        alert("Dimensions must be positive values.");
+        alert(t('alert.dimPositive'));
         return null;
       }
       if (tv >= B || th >= H) {
-        alert("Leg thicknesses must be smaller than leg widths.");
+        alert(t('alert.legThickSmaller'));
         return null;
       }
       
@@ -1416,16 +1417,16 @@ function updateResults(props) {
 function updateCoordsLists() {
   // Clear lists
   outerCoordsList.innerHTML = '';
-  outerCountDisplay.textContent = `${state.outerBoundary.length} pts`;
+  outerCountDisplay.textContent = `${state.outerBoundary.length} ${t('coords.pts')}`;
   
   if (state.outerBoundary.length === 0) {
-    outerCoordsList.innerHTML = '<li class="empty-list-msg">Click on the grid to add points</li>';
+    outerCoordsList.innerHTML = `<li class="empty-list-msg">${t('coords.emptyOuter')}</li>`;
   } else {
     state.outerBoundary.forEach((v, index) => {
       const li = document.createElement('li');
       li.innerHTML = `
         <span class="coord-text">Pt ${index + 1}: (${v.x.toFixed(0)}, ${v.y.toFixed(0)})</span>
-        <button class="btn-delete-pt" data-type="outer" data-index="${index}" title="Delete Point">
+        <button class="btn-delete-pt" data-type="outer" data-index="${index}" title="${t('tip.deletePoint')}">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
       `;
@@ -1435,10 +1436,10 @@ function updateCoordsLists() {
 
   // Clear holes
   holesContainer.innerHTML = '';
-  holesCountDisplay.textContent = `${state.holes.length} holes`;
+  holesCountDisplay.textContent = `${state.holes.length} ${t('coords.holesUnit')}`;
   
   if (state.holes.length === 0 && state.activeHole.length === 0) {
-    holesContainer.innerHTML = '<div class="empty-list-msg">No holes added yet</div>';
+    holesContainer.innerHTML = `<div class="empty-list-msg">${t('coords.emptyHoles')}</div>`;
   } else {
     // Render completed holes lists
     state.holes.forEach((hole, hIdx) => {
@@ -1448,8 +1449,8 @@ function updateCoordsLists() {
       const header = document.createElement('div');
       header.className = 'hole-section-header';
       header.innerHTML = `
-        <span>Hole ${hIdx + 1} (${hole.length} pts)</span>
-        <button class="btn-delete-pt" data-type="hole" data-index="${hIdx}" title="Delete Hole">
+        <span>Hole ${hIdx + 1} (${hole.length} ${t('coords.pts')})</span>
+        <button class="btn-delete-pt" data-type="hole" data-index="${hIdx}" title="${t('tip.deleteHole')}">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
       `;
@@ -1470,7 +1471,7 @@ function updateCoordsLists() {
     if (state.activeHole.length > 0) {
       const sec = document.createElement('div');
       sec.className = 'hole-section';
-      sec.innerHTML = `<div class="hole-section-header" style="color: #ef4444;">Hole (Drawing... ${state.activeHole.length} pts)</div>`;
+      sec.innerHTML = `<div class="hole-section-header" style="color: #ef4444;">${t('coords.holeDrawing')} ${state.activeHole.length} ${t('coords.pts')})</div>`;
       
       const ul = document.createElement('ul');
       ul.className = 'coords-list';
@@ -1495,10 +1496,10 @@ function updateCloseLoopButtonState() {
   if (!btnManualClose) return;
   if (state.drawingMode === 'OUTER') {
     btnManualClose.disabled = state.outerClosed || state.outerBoundary.length < 3;
-    btnManualClose.textContent = "Close Outer Loop";
+    btnManualClose.textContent = t('tools.closeOuterLoop');
   } else {
     btnManualClose.disabled = state.activeHole.length < 3;
-    btnManualClose.textContent = "Close Active Hole";
+    btnManualClose.textContent = t('tools.closeActiveHole');
   }
 }
 
@@ -1654,7 +1655,7 @@ function handleDrawingPlacement(pt) {
           state.holes.push([...state.activeHole]);
           state.activeHole = [];
         } else {
-          alert(`Invalid Hole Geometry: ${validation.reason}`);
+          alert(`${t('alert.invalidHole')} ${validation.reason}`);
           state.activeHole = [];
         }
         updateCoordsLists();
@@ -1911,14 +1912,14 @@ function openPresetModal(shapeKey) {
   const config = shapeConfigurations[shapeKey];
   if (!config) return;
 
-  presetModalTitle.textContent = config.title;
+  presetModalTitle.textContent = t(config.titleKey);
   presetFieldsContainer.innerHTML = '';
 
   config.fields.forEach(field => {
     const row = document.createElement('div');
     row.className = 'form-row';
     row.innerHTML = `
-      <label for="${field.id}">${field.label}</label>
+      <label for="${field.id}">${t(field.labelKey)}</label>
       <input type="${field.type}" id="${field.id}" value="${field.default}" required>
     `;
     presetFieldsContainer.appendChild(row);
@@ -2009,7 +2010,7 @@ if (btnManualAdd) {
     const yVal = parseFloat(inputManualY.value);
     
     if (isNaN(xVal) || isNaN(yVal)) {
-      alert("Please enter valid numerical values for X and Y.");
+      alert(t('alert.invalidCoords'));
       return;
     }
     
@@ -2074,7 +2075,7 @@ if (btnManualClose) {
         state.holes.push([...state.activeHole]);
         state.activeHole = [];
       } else {
-        alert(`Invalid Hole Geometry: ${validation.reason}`);
+        alert(`${t('alert.invalidHole')} ${validation.reason}`);
         state.activeHole = [];
       }
     }
@@ -2140,3 +2141,47 @@ window.addEventListener('keydown', (e) => {
     undo();
   }
 });
+
+// --- LANGUAGE TOGGLE ---
+const btnLangToggle = document.getElementById('btn-lang-toggle');
+if (btnLangToggle) {
+  btnLangToggle.addEventListener('click', () => {
+    state.lang = state.lang === 'en' ? 'pl' : 'en';
+    currentLang = state.lang;
+    applyLanguage(state.lang);
+    // Re-render dynamic content that uses t() calls
+    updateCoordsLists();
+    updateCloseLoopButtonState();
+  });
+}
+
+// --- MANUAL MODAL ---
+const btnManual = document.getElementById('btn-manual');
+const manualModal = document.getElementById('manual-modal');
+const btnCloseManual = document.getElementById('btn-close-manual');
+const btnCloseManualBottom = document.getElementById('btn-close-manual-bottom');
+
+function openManualModal() {
+  if (manualModal) {
+    applyLanguage(state.lang); // ensure manual content is in current language
+    manualModal.style.display = 'flex';
+  }
+}
+
+function closeManualModal() {
+  if (manualModal) {
+    manualModal.style.display = 'none';
+  }
+}
+
+if (btnManual) btnManual.addEventListener('click', openManualModal);
+if (btnCloseManual) btnCloseManual.addEventListener('click', closeManualModal);
+if (btnCloseManualBottom) btnCloseManualBottom.addEventListener('click', closeManualModal);
+if (manualModal) {
+  manualModal.addEventListener('click', (e) => {
+    if (e.target === manualModal) closeManualModal();
+  });
+}
+
+// --- INITIAL LANGUAGE APPLICATION ---
+applyLanguage(state.lang);
