@@ -182,69 +182,22 @@
 
       <!-- Center & Right Area: Interactive Canvas & Properties -->
       <main class="canvas-and-results">
-        <!-- Interactive Drawing Workspace -->
-        <div class="canvas-wrapper">
-          <div class="canvas-toolbar">
-            <!-- Sidebar Fold/Unfold Button -->
-            <button id="btn-toggle-sidebar" class="btn btn-small btn-sidebar-toggle" title="Fold Controls Panel" data-i18n-title="tip.foldSidebar" aria-label="Fold Controls Panel">
-              <span class="sidebar-toggle-arrow">◀</span>
-              <span class="sidebar-toggle-text" data-i18n="sidebar.fold">Fold Controls</span>
-            </button>
-
-            <div class="canvas-controls" style="display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-left: auto;">
-              <div class="coords-display" style="font-size: 11px; font-weight: 500; color: var(--text-secondary);">
-                <span data-i18n="canvas.cursor">Cursor:</span> <span class="coord-val" id="cursor-pos" style="font-weight: 600; color: var(--text-main);">X: 0.0, Y: 0.0</span>
-                <span id="draw-node-hint" class="draw-node-hint" data-i18n="canvas.drawNodeHint">│ Enable "Draw Node" to place points</span>
-              </div>
-              <div style="width: 1px; height: 16px; background-color: var(--border-color);"></div>
-              <label class="toggle-item inline-toggle">
-                <input type="checkbox" id="toggle-grid-snap" checked>
-                <span class="checkbox-custom small"></span>
-                <span data-i18n="canvas.snapToGrid">Snap to Grid</span>
-              </label>
-              <button class="btn btn-small" id="btn-zoom-in" title="Zoom In" data-i18n-title="tip.zoomIn" style="font-weight: bold; width: 28px;">+</button>
-              <button class="btn btn-small" id="btn-zoom-out" title="Zoom Out" data-i18n-title="tip.zoomOut" style="font-weight: bold; width: 28px;">-</button>
-              <button class="btn btn-small" id="btn-fit-zoom" data-i18n="canvas.fitShape">Fit Shape</button>
+        <!-- Calculated Values Display Section (Top Panel) -->
+        <section class="results-dashboard" id="results-dashboard">
+          <div class="results-header">
+            <div class="results-header-title">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+              <span data-i18n="results.title">Section Properties</span>
             </div>
-          </div>
-          
-          <div class="canvas-viewport" id="canvas-viewport-container">
-            <canvas id="viewport-canvas"></canvas>
-            
-            <!-- Axis Reversal HUD Controls (Moved to match Reference Axes top: 60px) -->
-            <div class="canvas-hud" id="axis-reversal-hud" style="position: absolute; top: 60px; left: 16px; display: flex; flex-direction: column; gap: 6px; padding: 10px; pointer-events: auto; z-index: 10;">
-              <div class="hud-title" style="font-size: 10px; margin-bottom: 2px; border-bottom: none; padding-bottom: 0; color: var(--accent-primary);" data-i18n="hud.axisDirection">Axis Direction</div>
-              <label class="toggle-item" style="font-size: 10px; gap: 6px; padding: 2px 0;">
-                <input type="checkbox" id="toggle-reverse-x">
-                <span class="checkbox-custom" style="width: 12px; height: 12px;"></span>
-                <span data-i18n="hud.reverseX">Reverse X (+ Left)</span>
-              </label>
-              <label class="toggle-item" style="font-size: 10px; gap: 6px; padding: 2px 0;">
-                <input type="checkbox" id="toggle-reverse-y" checked>
-                <span class="checkbox-custom" style="width: 12px; height: 12px;"></span>
-                <span data-i18n="hud.reverseY">Reverse Y (+ Up)</span>
-              </label>
-            </div>
-            
-            <!-- Reference Axes Note Panel -->
-            <div class="canvas-hud" id="ref-axes-note-panel" style="position: absolute; top: 60px; right: 16px; width: 280px; z-index: 10; pointer-events: auto;">
-              <button class="modal-close" id="btn-close-axes-note" title="Dismiss Note" data-i18n-title="tip.dismiss" style="top: 8px; right: 10px; font-size: 18px;">&times;</button>
-              <div class="hud-title" style="font-size: 11px; margin-bottom: 4px; border-bottom: none; padding-bottom: 0; color: var(--accent-primary);" data-i18n="hud.refAxes">Reference Axes</div>
-              <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.4; padding-right: 12px; font-weight: 500;" data-i18n-html="hud.refAxesNote">
-                Note: I<sub>x</sub> & I<sub>y</sub> are derived about the reference axes x=0, y=0 (aligned with top fiber).
-              </div>
-            </div>
-
-            <!-- Draw Node Toggle Button -->
-            <button id="btn-draw-node" class="btn-draw-node" data-i18n="canvas.drawNode">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
-              Draw Node
+            <button id="btn-fold-results-header" class="btn btn-small btn-fold-results" title="Fold Section Data" data-i18n-title="tip.foldResults" aria-label="Fold Section Data">
+              <span class="fold-arrow">▲</span>
+              <span data-i18n="results.fold">Fold</span>
             </button>
           </div>
-        </div>
-
-        <!-- Calculated Values Display Section -->
-        <section class="results-dashboard">
           <div class="results-grid">
             
             <div class="result-card">
@@ -309,6 +262,75 @@
 
           </div>
         </section>
+
+        <!-- Interactive Drawing Workspace -->
+        <div class="canvas-wrapper">
+          <div class="canvas-toolbar">
+            <div class="toolbar-left-actions" style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <!-- Sidebar Fold/Unfold Button -->
+              <button id="btn-toggle-sidebar" class="btn btn-small btn-sidebar-toggle" title="Fold Controls Panel" data-i18n-title="tip.foldSidebar" aria-label="Fold Controls Panel">
+                <span class="sidebar-toggle-arrow">◀</span>
+                <span class="sidebar-toggle-text" data-i18n="sidebar.fold">Fold Controls</span>
+              </button>
+
+              <!-- Results Dashboard Fold/Unfold Button -->
+              <button id="btn-toggle-results" class="btn btn-small btn-results-toggle" title="Fold Section Data" data-i18n-title="tip.foldResults" aria-label="Fold Section Data">
+                <span class="results-toggle-arrow">▲</span>
+                <span class="results-toggle-text" data-i18n="results.foldData">Fold Data</span>
+              </button>
+            </div>
+
+            <div class="canvas-controls" style="display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-left: auto;">
+              <div class="coords-display" style="font-size: 11px; font-weight: 500; color: var(--text-secondary);">
+                <span data-i18n="canvas.cursor">Cursor:</span> <span class="coord-val" id="cursor-pos" style="font-weight: 600; color: var(--text-main);">X: 0.0, Y: 0.0</span>
+                <span id="draw-node-hint" class="draw-node-hint" data-i18n="canvas.drawNodeHint">│ Enable "Draw Node" to place points</span>
+              </div>
+              <div style="width: 1px; height: 16px; background-color: var(--border-color);"></div>
+              <label class="toggle-item inline-toggle">
+                <input type="checkbox" id="toggle-grid-snap" checked>
+                <span class="checkbox-custom small"></span>
+                <span data-i18n="canvas.snapToGrid">Snap to Grid</span>
+              </label>
+              <button class="btn btn-small" id="btn-zoom-in" title="Zoom In" data-i18n-title="tip.zoomIn" style="font-weight: bold; width: 28px;">+</button>
+              <button class="btn btn-small" id="btn-zoom-out" title="Zoom Out" data-i18n-title="tip.zoomOut" style="font-weight: bold; width: 28px;">-</button>
+              <button class="btn btn-small" id="btn-fit-zoom" data-i18n="canvas.fitShape">Fit Shape</button>
+            </div>
+          </div>
+          
+          <div class="canvas-viewport" id="canvas-viewport-container">
+            <canvas id="viewport-canvas"></canvas>
+            
+            <!-- Axis Reversal HUD Controls (Moved to match Reference Axes top: 60px) -->
+            <div class="canvas-hud" id="axis-reversal-hud" style="position: absolute; top: 60px; left: 16px; display: flex; flex-direction: column; gap: 6px; padding: 10px; pointer-events: auto; z-index: 10;">
+              <div class="hud-title" style="font-size: 10px; margin-bottom: 2px; border-bottom: none; padding-bottom: 0; color: var(--accent-primary);" data-i18n="hud.axisDirection">Axis Direction</div>
+              <label class="toggle-item" style="font-size: 10px; gap: 6px; padding: 2px 0;">
+                <input type="checkbox" id="toggle-reverse-x">
+                <span class="checkbox-custom" style="width: 12px; height: 12px;"></span>
+                <span data-i18n="hud.reverseX">Reverse X (+ Left)</span>
+              </label>
+              <label class="toggle-item" style="font-size: 10px; gap: 6px; padding: 2px 0;">
+                <input type="checkbox" id="toggle-reverse-y" checked>
+                <span class="checkbox-custom" style="width: 12px; height: 12px;"></span>
+                <span data-i18n="hud.reverseY">Reverse Y (+ Up)</span>
+              </label>
+            </div>
+            
+            <!-- Reference Axes Note Panel -->
+            <div class="canvas-hud" id="ref-axes-note-panel" style="position: absolute; top: 60px; right: 16px; width: 280px; z-index: 10; pointer-events: auto;">
+              <button class="modal-close" id="btn-close-axes-note" title="Dismiss Note" data-i18n-title="tip.dismiss" style="top: 8px; right: 10px; font-size: 18px;">&times;</button>
+              <div class="hud-title" style="font-size: 11px; margin-bottom: 4px; border-bottom: none; padding-bottom: 0; color: var(--accent-primary);" data-i18n="hud.refAxes">Reference Axes</div>
+              <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.4; padding-right: 12px; font-weight: 500;" data-i18n-html="hud.refAxesNote">
+                Note: I<sub>x</sub> & I<sub>y</sub> are derived about the reference axes x=0, y=0 (aligned with top fiber).
+              </div>
+            </div>
+
+            <!-- Draw Node Toggle Button -->
+            <button id="btn-draw-node" class="btn-draw-node" data-i18n="canvas.drawNode">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+              Draw Node
+            </button>
+          </div>
+        </div>
       </main>
     </div>
   </div>

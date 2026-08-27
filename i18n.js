@@ -76,7 +76,13 @@ const translations = {
     'hud.refAxes': 'Reference Axes',
     'hud.refAxesNote': 'Note: I<sub>x</sub> & I<sub>y</sub> are derived about the reference axes x=0, y=0 (aligned with top fiber).',
 
-    // Result cards — labels
+    // Result cards — labels & folding
+    'results.title': 'Section Properties',
+    'results.fold': 'Fold',
+    'results.foldData': 'Fold Data',
+    'results.unfoldData': 'Show Data',
+    'tip.foldResults': 'Fold Section Data',
+    'tip.unfoldResults': 'Show Section Data',
     'result.area.label': 'Area (A)',
     'result.centroid.label': 'Centroid (X, Y)',
     'result.ix.label': 'Moment of Inertia (I<sub>xc</sub>)',
@@ -288,7 +294,13 @@ const translations = {
     'hud.refAxes': 'Osie odniesienia',
     'hud.refAxesNote': 'Uwaga: I<sub>x</sub> i I<sub>y</sub> obliczone względem osi odniesienia x=0, y=0 (wyrównane z górnym włóknem).',
 
-    // Result cards — labels
+    // Result cards — labels & folding
+    'results.title': 'Właściwości przekroju',
+    'results.fold': 'Zwiń',
+    'results.foldData': 'Zwiń dane',
+    'results.unfoldData': 'Pokaż dane',
+    'tip.foldResults': 'Zwiń dane przekroju',
+    'tip.unfoldResults': 'Pokaż dane przekroju',
     'result.area.label': 'Pole przekroju (A)',
     'result.centroid.label': 'Środek ciężkości (X, Y)',
     'result.ix.label': 'Moment bezwładności (I<sub>xc</sub>)',

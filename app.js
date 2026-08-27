@@ -2238,6 +2238,7 @@ if (btnLangToggle) {
     updateCoordsLists();
     updateCloseLoopButtonState();
     if (typeof updateSidebarButtonUI === 'function') updateSidebarButtonUI();
+    if (typeof updateResultsButtonUI === 'function') updateResultsButtonUI();
   });
 }
 
@@ -2371,6 +2372,48 @@ if (window.ResizeObserver && container) {
   });
   ro.observe(container);
 }
+
+// --- RESULTS DASHBOARD FOLD / UNFOLD LOGIC ---
+const resultsDashboard = document.getElementById('results-dashboard');
+const btnToggleResults = document.getElementById('btn-toggle-results');
+const btnFoldResultsHeader = document.getElementById('btn-fold-results-header');
+
+let isResultsFolded = false;
+
+function updateResultsButtonUI() {
+  if (!btnToggleResults) return;
+  btnToggleResults.classList.toggle('active', isResultsFolded);
+  const arrow = btnToggleResults.querySelector('.results-toggle-arrow');
+  const text = btnToggleResults.querySelector('.results-toggle-text');
+  if (arrow) arrow.textContent = isResultsFolded ? '▼' : '▲';
+  if (text) text.textContent = isResultsFolded ? t('results.unfoldData') : t('results.foldData');
+  btnToggleResults.title = isResultsFolded ? t('tip.unfoldResults') : t('tip.foldResults');
+}
+
+function foldResults() {
+  isResultsFolded = true;
+  if (resultsDashboard) resultsDashboard.classList.add('folded');
+  updateResultsButtonUI();
+  animateCanvasResize();
+}
+
+function unfoldResults() {
+  isResultsFolded = false;
+  if (resultsDashboard) resultsDashboard.classList.remove('folded');
+  updateResultsButtonUI();
+  animateCanvasResize();
+}
+
+function toggleResults() {
+  if (isResultsFolded) {
+    unfoldResults();
+  } else {
+    foldResults();
+  }
+}
+
+if (btnToggleResults) btnToggleResults.addEventListener('click', toggleResults);
+if (btnFoldResultsHeader) btnFoldResultsHeader.addEventListener('click', foldResults);
 
 // --- INITIAL LANGUAGE APPLICATION ---
 applyLanguage(state.lang);
