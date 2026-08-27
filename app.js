@@ -1604,6 +1604,90 @@ function setupCanvasEvents() {
     draw();
     e.preventDefault();
   }, { passive: false });
+
+  // Touch Event Handling for Mobile / Phone users
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchHasDragged = false;
+  let touchInitialDist = 0;
+  let touchInitialZoom = 1;
+
+  canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchHasDragged = false;
+      state.isPanning = true;
+      state.dragStartX = t.clientX;
+      state.dragStartY = t.clientY;
+    } else if (e.touches.length === 2) {
+      state.isPanning = false;
+      touchHasDragged = true;
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      touchInitialDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+      touchInitialZoom = state.zoom;
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 1 && state.isPanning) {
+      const t = e.touches[0];
+      if (Math.hypot(t.clientX - touchStartX, t.clientY - touchStartY) > 5) {
+        touchHasDragged = true;
+      }
+      const dx = t.clientX - state.dragStartX;
+      const dy = t.clientY - state.dragStartY;
+      state.panX += dx;
+      state.panY += dy;
+      state.dragStartX = t.clientX;
+      state.dragStartY = t.clientY;
+
+      const rect = canvas.getBoundingClientRect();
+      const mx = t.clientX - rect.left;
+      const my = t.clientY - rect.top;
+      let gridPt = canvasToGrid(mx, my);
+      if (state.gridSnap) {
+        gridPt.x = Math.round(gridPt.x / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+        gridPt.y = Math.round(gridPt.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+      }
+      cursorDisplay.textContent = `X: ${gridPt.x.toFixed(1)}, Y: ${gridPt.y.toFixed(1)}`;
+
+      draw();
+    } else if (e.touches.length === 2) {
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+      if (touchInitialDist > 0) {
+        const factor = dist / touchInitialDist;
+        state.zoom = Math.max(0.2, Math.min(50.0, touchInitialZoom * factor));
+        draw();
+      }
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', (e) => {
+    if (state.isPanning) {
+      state.isPanning = false;
+      if (!touchHasDragged && state.drawNodeActive && e.changedTouches.length === 1) {
+        const t = e.changedTouches[0];
+        const rect = canvas.getBoundingClientRect();
+        const mx = t.clientX - rect.left;
+        const my = t.clientY - rect.top;
+        let gridPt = canvasToGrid(mx, my);
+
+        if (state.gridSnap) {
+          gridPt.x = Math.round(gridPt.x / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+          gridPt.y = Math.round(gridPt.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+        }
+
+        handleDrawingPlacement(gridPt);
+      }
+    }
+  });
 }
 
 /**
@@ -2153,6 +2237,7 @@ if (btnLangToggle) {
     // Re-render dynamic content that uses t() calls
     updateCoordsLists();
     updateCloseLoopButtonState();
+    if (typeof updateSidebarButtonUI === 'function') updateSidebarButtonUI();
   });
 }
 
@@ -2195,5 +2280,98 @@ if (btnDrawNode) {
   });
 }
 
+// --- SIDEBAR FOLD / UNFOLD LOGIC (MANUAL TOGGLE, NEVER AUTO-HIDE) ---
+const mainGrid = document.querySelector('.app-main-grid');
+const leftPanel = document.getElementById('left-panel');
+const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+const btnHeaderSidebar = document.getElementById('btn-header-sidebar');
+const btnCollapseSidebar = document.getElementById('btn-collapse-sidebar');
+const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+let isSidebarFolded = false;
+
+function isMobile() {
+  return window.innerWidth <= 768;
+}
+
+function updateSidebarButtonUI() {
+  if (!btnToggleSidebar) return;
+  btnToggleSidebar.classList.toggle('active', isSidebarFolded);
+  const arrow = btnToggleSidebar.querySelector('.sidebar-toggle-arrow');
+  const text = btnToggleSidebar.querySelector('.sidebar-toggle-text');
+  if (arrow) arrow.textContent = isSidebarFolded ? '▶' : '◀';
+  if (text) text.textContent = isSidebarFolded ? t('sidebar.unfold') : t('sidebar.fold');
+  btnToggleSidebar.title = isSidebarFolded ? t('tip.unfoldSidebar') : t('tip.foldSidebar');
+}
+
+function foldSidebar() {
+  isSidebarFolded = true;
+  if (isMobile()) {
+    if (leftPanel) leftPanel.classList.add('mobile-folded');
+    if (sidebarBackdrop) sidebarBackdrop.classList.add('hidden');
+  } else {
+    if (mainGrid) mainGrid.classList.add('sidebar-collapsed');
+    animateCanvasResize();
+  }
+  updateSidebarButtonUI();
+}
+
+function unfoldSidebar() {
+  isSidebarFolded = false;
+  if (isMobile()) {
+    if (leftPanel) leftPanel.classList.remove('mobile-folded');
+    if (sidebarBackdrop) sidebarBackdrop.classList.remove('hidden');
+  } else {
+    if (mainGrid) mainGrid.classList.remove('sidebar-collapsed');
+    animateCanvasResize();
+  }
+  updateSidebarButtonUI();
+}
+
+function toggleSidebar() {
+  if (isSidebarFolded) {
+    unfoldSidebar();
+  } else {
+    foldSidebar();
+  }
+}
+
+function animateCanvasResize() {
+  const startTime = performance.now();
+  function loop() {
+    resizeCanvas();
+    if (performance.now() - startTime < 350) {
+      requestAnimationFrame(loop);
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+if (btnToggleSidebar) btnToggleSidebar.addEventListener('click', toggleSidebar);
+if (btnHeaderSidebar) btnHeaderSidebar.addEventListener('click', toggleSidebar);
+if (btnCollapseSidebar) btnCollapseSidebar.addEventListener('click', foldSidebar);
+if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', foldSidebar);
+
+// Responsive window listener
+window.addEventListener('resize', () => {
+  if (!isMobile()) {
+    if (sidebarBackdrop) sidebarBackdrop.classList.remove('hidden');
+    if (leftPanel) leftPanel.classList.remove('mobile-folded');
+    if (isSidebarFolded && mainGrid) {
+      mainGrid.classList.add('sidebar-collapsed');
+    }
+  }
+  resizeCanvas();
+});
+
+// ResizeObserver for automatic canvas resizing when container dimensions change
+if (window.ResizeObserver && container) {
+  const ro = new ResizeObserver(() => {
+    resizeCanvas();
+  });
+  ro.observe(container);
+}
+
 // --- INITIAL LANGUAGE APPLICATION ---
 applyLanguage(state.lang);
+

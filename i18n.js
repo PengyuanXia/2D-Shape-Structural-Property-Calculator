@@ -13,6 +13,13 @@ const translations = {
     'page.title': 'SecCalc // 2D Section Property Calculator',
     'header.subtitle': '2D Shape Structural Property Calculator',
 
+    // Sidebar
+    'sidebar.title': 'Controls & Presets',
+    'sidebar.toggle': 'Controls',
+    'sidebar.fold': 'Fold Controls',
+    'sidebar.unfold': 'Unfold Controls',
+    'sidebar.foldPanel': 'Fold',
+
     // Preset Templates
     'presets.title': 'Preset Templates',
     'preset.rect': 'Rectangle',
@@ -144,6 +151,10 @@ const translations = {
     'alert.invalidHole': 'Invalid Hole Geometry:',
 
     // Tooltips
+    'tip.toggleSidebar': 'Toggle Controls Panel',
+    'tip.collapseSidebar': 'Fold Panel',
+    'tip.foldSidebar': 'Fold Controls Panel',
+    'tip.unfoldSidebar': 'Unfold Controls Panel',
     'tip.themeToggle': 'Toggle Light/Dark Mode',
     'tip.sponsor': 'Buy Me a Coffee (Ko-fi)',
     'tip.manual': 'User Manual',
@@ -213,6 +224,13 @@ const translations = {
     // Page title
     'page.title': 'SecCalc // Kalkulator właściwości przekroju 2D',
     'header.subtitle': 'Kalkulator właściwości przekroju 2D',
+
+    // Sidebar
+    'sidebar.title': 'Sterowanie i szablony',
+    'sidebar.toggle': 'Sterowanie',
+    'sidebar.fold': 'Zwiń panel',
+    'sidebar.unfold': 'Rozwiń panel',
+    'sidebar.foldPanel': 'Zwiń',
 
     // Preset Templates
     'presets.title': 'Szablony przekrojów',
@@ -345,6 +363,10 @@ const translations = {
     'alert.invalidHole': 'Nieprawidłowa geometria otworu:',
 
     // Tooltips
+    'tip.toggleSidebar': 'Pokaż/zwiń panel sterowania',
+    'tip.collapseSidebar': 'Zwiń panel',
+    'tip.foldSidebar': 'Zwiń panel sterowania',
+    'tip.unfoldSidebar': 'Rozwiń panel sterowania',
     'tip.themeToggle': 'Przełącz tryb jasny/ciemny',
     'tip.sponsor': 'Postaw mi kawę (Ko-fi)',
     'tip.manual': 'Instrukcja obsługi',
