@@ -88,7 +88,7 @@
           <div class="accordion">
             <div class="accordion-item">
               <div class="accordion-header" data-i18n="viz.title">
-                Visualizations
+                Visualization Items
               </div>
               <div class="accordion-content">
                 <div class="toggle-list" style="padding-top: 10px;">
@@ -162,6 +162,7 @@
             <div class="canvas-controls" style="width: 100%; display: flex; align-items: center; justify-content: flex-end; gap: 16px;">
               <div class="coords-display" style="font-size: 11px; font-weight: 500; color: var(--text-secondary);">
                 <span data-i18n="canvas.cursor">Cursor:</span> <span class="coord-val" id="cursor-pos" style="font-weight: 600; color: var(--text-main);">X: 0.0, Y: 0.0</span>
+                <span id="draw-node-hint" class="draw-node-hint" data-i18n="canvas.drawNodeHint">│ Enable "Draw Node" to place points</span>
               </div>
               <div style="width: 1px; height: 16px; background-color: var(--border-color);"></div>
               <label class="toggle-item inline-toggle">
@@ -201,6 +202,12 @@
                 Note: I<sub>x</sub> & I<sub>y</sub> are derived about the reference axes x=0, y=0 (aligned with top fiber).
               </div>
             </div>
+
+            <!-- Draw Node Toggle Button -->
+            <button id="btn-draw-node" class="btn-draw-node" data-i18n="canvas.drawNode">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+              Draw Node
+            </button>
           </div>
         </div>
 

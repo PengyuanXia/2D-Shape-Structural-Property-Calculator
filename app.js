@@ -20,6 +20,7 @@ const state = {
   gridSnap: true,
   reverseX: false,
   reverseY: true,
+  drawNodeActive: false,
   
   // Canvas View State
   zoom: 2.0, // Pixels per unit
@@ -1559,8 +1560,8 @@ function setupCanvasEvents() {
   window.addEventListener('mouseup', (e) => {
     if (state.isPanning) {
       state.isPanning = false;
-      // If it was a clean left click (button 0, no shift key) on the canvas, and we did not drag
-      if (!hasDragged && e.button === 0 && !e.shiftKey && e.target === canvas) {
+      // If it was a clean left click (button 0, no shift key) on the canvas, and we did not drag, and draw node is active
+      if (!hasDragged && e.button === 0 && !e.shiftKey && e.target === canvas && state.drawNodeActive) {
         const rect = canvas.getBoundingClientRect();
         const mx = e.clientX - rect.left;
         const my = e.clientY - rect.top;
@@ -2180,6 +2181,17 @@ if (btnCloseManualBottom) btnCloseManualBottom.addEventListener('click', closeMa
 if (manualModal) {
   manualModal.addEventListener('click', (e) => {
     if (e.target === manualModal) closeManualModal();
+  });
+}
+
+// --- DRAW NODE TOGGLE ---
+const btnDrawNode = document.getElementById('btn-draw-node');
+const drawNodeHint = document.getElementById('draw-node-hint');
+if (btnDrawNode) {
+  btnDrawNode.addEventListener('click', () => {
+    state.drawNodeActive = !state.drawNodeActive;
+    btnDrawNode.classList.toggle('active', state.drawNodeActive);
+    if (drawNodeHint) drawNodeHint.classList.toggle('hidden', state.drawNodeActive);
   });
 }
 

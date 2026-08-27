@@ -1242,3 +1242,57 @@ input[type="range"]::-webkit-slider-thumb:hover {
   background: var(--border-color);
   border-radius: 3px;
 }
+
+/* Draw Node Hint */
+.draw-node-hint {
+  margin-left: 6px;
+  font-size: 11px;
+  color: var(--accent-primary);
+  opacity: 0.8;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+.draw-node-hint.hidden {
+  display: none;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Draw Node Toggle Button */
+.btn-draw-node {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+}
+
+.btn-draw-node:hover {
+  color: var(--text-main);
+  border-color: var(--text-main);
+  transform: scale(1.03);
+}
+
+.btn-draw-node.active {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.25);
+}

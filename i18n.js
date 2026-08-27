@@ -38,7 +38,7 @@ const translations = {
     'action.undo': 'Undo',
 
     // Visualizations
-    'viz.title': 'Visualizations',
+    'viz.title': 'Visualization Items',
     'viz.centroid': 'Centroid (C)',
     'viz.principalAxes': 'Principal Axes (1-2)',
     'viz.ena': 'Elastic Neutral Axis (ENA)',
@@ -59,6 +59,8 @@ const translations = {
     'canvas.cursor': 'Cursor:',
     'canvas.snapToGrid': 'Snap to Grid',
     'canvas.fitShape': 'Fit Shape',
+    'canvas.drawNode': 'Draw Node',
+    'canvas.drawNodeHint': '│ Enable "Draw Node" to place points',
 
     // HUD
     'hud.axisDirection': 'Axis Direction',
@@ -237,7 +239,7 @@ const translations = {
     'action.undo': 'Cofnij',
 
     // Visualizations
-    'viz.title': 'Wizualizacje',
+    'viz.title': 'Elementy wizualizacji',
     'viz.centroid': 'Środek ciężkości (C)',
     'viz.principalAxes': 'Osie główne (1-2)',
     'viz.ena': 'Elastyczna oś obojętna (EOO)',
@@ -258,6 +260,8 @@ const translations = {
     'canvas.cursor': 'Kursor:',
     'canvas.snapToGrid': 'Przyciągaj do siatki',
     'canvas.fitShape': 'Dopasuj widok',
+    'canvas.drawNode': 'Rysuj węzeł',
+    'canvas.drawNodeHint': '│ Włącz „Rysuj węzeł" aby stawiać punkty',
 
     // HUD
     'hud.axisDirection': 'Kierunek osi',
