@@ -2085,6 +2085,8 @@ init();
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closePresetModal();
+    closeManualModal();
+    if (typeof closeContactModal === 'function') closeContactModal();
   }
 });
 
@@ -2239,6 +2241,68 @@ if (btnLangToggle) {
     updateCloseLoopButtonState();
     if (typeof updateSidebarButtonUI === 'function') updateSidebarButtonUI();
     if (typeof updateResultsButtonUI === 'function') updateResultsButtonUI();
+  });
+}
+
+// --- CONTACT & FEEDBACK MODAL ---
+const btnContact = document.getElementById('btn-contact');
+const contactModal = document.getElementById('contact-modal');
+const btnCloseContactModal = document.getElementById('btn-close-contact-modal');
+const btnCloseContactBottom = document.getElementById('btn-close-contact-bottom');
+const btnCopyEmail = document.getElementById('btn-copy-email');
+const btnCopyEmailText = document.getElementById('btn-copy-email-text');
+const toastNotification = document.getElementById('toast-notification');
+
+let toastTimeout = null;
+function showToast(message, duration = 3000) {
+  if (!toastNotification) return;
+  toastNotification.textContent = message;
+  toastNotification.classList.add('show');
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
+    toastNotification.classList.remove('show');
+  }, duration);
+}
+
+function openContactModal() {
+  if (contactModal) {
+    applyLanguage(state.lang);
+    contactModal.style.display = 'flex';
+  }
+}
+
+function closeContactModal() {
+  if (contactModal) {
+    contactModal.style.display = 'none';
+  }
+}
+
+function copyEmailToClipboard() {
+  const email = 'pengyuan.xia.dokt@pw.edu.pl';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(email).then(() => {
+      showToast(t('toast.emailCopied') || '📋 Email copied to clipboard!');
+      if (btnCopyEmailText) {
+        btnCopyEmailText.textContent = t('contact.copiedBtn') || '✓ Copied!';
+        setTimeout(() => {
+          if (btnCopyEmailText) btnCopyEmailText.textContent = t('contact.copyBtn') || '📋 Copy';
+        }, 2200);
+      }
+    }).catch(() => {
+      showToast(email);
+    });
+  } else {
+    showToast(email);
+  }
+}
+
+if (btnContact) btnContact.addEventListener('click', openContactModal);
+if (btnCloseContactModal) btnCloseContactModal.addEventListener('click', closeContactModal);
+if (btnCloseContactBottom) btnCloseContactBottom.addEventListener('click', closeContactModal);
+if (btnCopyEmail) btnCopyEmail.addEventListener('click', copyEmailToClipboard);
+if (contactModal) {
+  contactModal.addEventListener('click', (e) => {
+    if (e.target === contactModal) closeContactModal();
   });
 }
 

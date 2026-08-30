@@ -172,6 +172,24 @@ const translations = {
     'tip.deletePoint': 'Delete Point',
     'tip.deleteHole': 'Delete Hole',
     'tip.dismiss': 'Dismiss Note',
+    'tip.copyEmail': 'Copy email address',
+    'tip.sendEmail': 'Send Email',
+    'tip.close': 'Close',
+
+    // Contact & Feedback
+    'contact.btn': 'Contact',
+    'contact.tooltip': 'Contact & Feedback',
+    'contact.modalTitle': 'Contact & Feedback',
+    'contact.authorSub': 'Doctoral Researcher • Warsaw University of Technology (PW)',
+    'contact.emailTitle': 'University Email',
+    'contact.githubTitle': 'GitHub Repository',
+    'contact.githubSub': 'Bug reports & feature requests',
+    'contact.kofiTitle': 'Buy Me a Coffee',
+    'contact.kofiSub': 'Support project development',
+    'contact.copyBtn': '📋 Copy',
+    'contact.copiedBtn': '✓ Copied!',
+    'contact.sendBtn': '✉️ Send',
+    'toast.emailCopied': '📋 Email copied to clipboard!',
 
     // Manual content
     'manual.title': 'User Manual',
@@ -390,6 +408,24 @@ const translations = {
     'tip.deletePoint': 'Usuń punkt',
     'tip.deleteHole': 'Usuń otwór',
     'tip.dismiss': 'Zamknij notatkę',
+    'tip.copyEmail': 'Kopiuj adres e-mail',
+    'tip.sendEmail': 'Wyślij e-mail',
+    'tip.close': 'Zamknij',
+
+    // Contact & Feedback
+    'contact.btn': 'Kontakt',
+    'contact.tooltip': 'Kontakt z autorem i opinie',
+    'contact.modalTitle': 'Kontakt i Opinie',
+    'contact.authorSub': 'Doktorant • Politechnika Warszawska (PW)',
+    'contact.emailTitle': 'E-mail uczelniany',
+    'contact.githubTitle': 'Repozytorium GitHub',
+    'contact.githubSub': 'Zgłoszenia błędów i propozycje funkcji',
+    'contact.kofiTitle': 'Postaw kawę',
+    'contact.kofiSub': 'Wesprzyj rozwój projektu',
+    'contact.copyBtn': '📋 Kopiuj',
+    'contact.copiedBtn': '✓ Skopiowano!',
+    'contact.sendBtn': '✉️ Wyślij',
+    'toast.emailCopied': '📋 Adres e-mail skopiowany do schowka!',
 
     // Manual content
     'manual.title': 'Instrukcja obsługi',
