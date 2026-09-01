@@ -74,7 +74,7 @@ const translations = {
     'hud.reverseX': 'Reverse X (+ Left)',
     'hud.reverseY': 'Reverse Y (+ Up)',
     'hud.refAxes': 'Reference Axes',
-    'hud.refAxesNote': 'Note: I<sub>x</sub> & I<sub>y</sub> are derived about the reference axes x=0, y=0 (aligned with top fiber).',
+    'hud.refAxesNote': 'Note: J<sub>x</sub> & J<sub>y</sub> are derived about the reference axes x=0, y=0 (aligned with top fiber).',
 
     // Result cards — labels & folding
     'results.title': 'Section Properties',
@@ -85,12 +85,12 @@ const translations = {
     'tip.unfoldResults': 'Show Section Data',
     'result.area.label': 'Area (A)',
     'result.centroid.label': 'Centroid (X, Y)',
-    'result.ix.label': 'Moment of Inertia (I<sub>xc</sub>)',
-    'result.iy.label': 'Moment of Inertia (I<sub>yc</sub>)',
-    'result.ixy.label': 'Product of Inertia (I<sub>xyc</sub>)',
+    'result.ix.label': 'Moment of Inertia (J<sub>x</sub>)',
+    'result.iy.label': 'Moment of Inertia (J<sub>y</sub>)',
+    'result.ixy.label': 'Product of Inertia (J<sub>xy</sub>)',
     'result.theta.label': 'Principal Angle (θ<sub>p</sub>)',
-    'result.i1.label': 'Max Principal Moment (I<sub>1</sub>)',
-    'result.i2.label': 'Min Principal Moment (I<sub>2</sub>)',
+    'result.i1.label': 'Max Principal Moment (J<sub>1</sub>)',
+    'result.i2.label': 'Min Principal Moment (J<sub>2</sub>)',
     'result.ena.label': 'Elastic Neutral Axis (ENA)',
     'result.pna.label': 'Plastic Neutral Axis (PNA)',
 
@@ -232,10 +232,10 @@ const translations = {
       <table>
         <tr><td><strong>Area (A)</strong></td><td>Net cross-sectional area (outer minus holes).</td></tr>
         <tr><td><strong>Centroid (X, Y)</strong></td><td>Coordinates of the geometric center of mass.</td></tr>
-        <tr><td><strong>I<sub>xc</sub>, I<sub>yc</sub></strong></td><td>Second moments of area about centroidal axes — measure of bending resistance.</td></tr>
-        <tr><td><strong>I<sub>xyc</sub></strong></td><td>Product of inertia — indicates section asymmetry. Zero for symmetric shapes.</td></tr>
+        <tr><td><strong>J<sub>x</sub>, J<sub>y</sub></strong></td><td>Second moments of area about centroidal axes — measure of bending resistance.</td></tr>
+        <tr><td><strong>J<sub>xy</sub></strong></td><td>Product of inertia — indicates section asymmetry. Zero for symmetric shapes.</td></tr>
         <tr><td><strong>θ<sub>p</sub></strong></td><td>Principal angle — rotation from reference axes to principal axes.</td></tr>
-        <tr><td><strong>I<sub>1</sub>, I<sub>2</sub></strong></td><td>Maximum and minimum principal moments of inertia.</td></tr>
+        <tr><td><strong>J<sub>1</sub>, J<sub>2</sub></strong></td><td>Maximum and minimum principal moments of inertia.</td></tr>
         <tr><td><strong>ENA</strong></td><td>Elastic Neutral Axis — zero-stress line under elastic bending.</td></tr>
         <tr><td><strong>PNA</strong></td><td>Plastic Neutral Axis — line dividing the section into equal areas for full plastic capacity.</td></tr>
         <tr><td><strong>Kern</strong></td><td>Cross-section core — region where load application produces no tension.</td></tr>
@@ -310,7 +310,7 @@ const translations = {
     'hud.reverseX': 'Odwróć X (+ lewo)',
     'hud.reverseY': 'Odwróć Y (+ góra)',
     'hud.refAxes': 'Osie odniesienia',
-    'hud.refAxesNote': 'Uwaga: I<sub>x</sub> i I<sub>y</sub> obliczone względem osi odniesienia x=0, y=0 (wyrównane z górnym włóknem).',
+    'hud.refAxesNote': 'Uwaga: J<sub>x</sub> i J<sub>y</sub> obliczone względem osi odniesienia x=0, y=0 (wyrównane z górnym włóknem).',
 
     // Result cards — labels & folding
     'results.title': 'Właściwości przekroju',
@@ -321,12 +321,12 @@ const translations = {
     'tip.unfoldResults': 'Pokaż dane przekroju',
     'result.area.label': 'Pole przekroju (A)',
     'result.centroid.label': 'Środek ciężkości (X, Y)',
-    'result.ix.label': 'Moment bezwładności (I<sub>xc</sub>)',
-    'result.iy.label': 'Moment bezwładności (I<sub>yc</sub>)',
-    'result.ixy.label': 'Dewiacja (I<sub>xyc</sub>)',
+    'result.ix.label': 'Moment bezwładności (J<sub>x</sub>)',
+    'result.iy.label': 'Moment bezwładności (J<sub>y</sub>)',
+    'result.ixy.label': 'Moment dewiacji (J<sub>xy</sub>)',
     'result.theta.label': 'Kąt główny (θ<sub>p</sub>)',
-    'result.i1.label': 'Maks. moment główny (I<sub>1</sub>)',
-    'result.i2.label': 'Min. moment główny (I<sub>2</sub>)',
+    'result.i1.label': 'Maks. moment główny (J<sub>1</sub>)',
+    'result.i2.label': 'Min. moment główny (J<sub>2</sub>)',
     'result.ena.label': 'Elastyczna oś obojętna (EOO)',
     'result.pna.label': 'Plastyczna oś obojętna (POO)',
 
@@ -468,10 +468,10 @@ const translations = {
       <table>
         <tr><td><strong>Pole przekroju (A)</strong></td><td>Pole netto przekroju poprzecznego (obrys minus otwory).</td></tr>
         <tr><td><strong>Środek ciężkości (X, Y)</strong></td><td>Współrzędne geometrycznego środka masy.</td></tr>
-        <tr><td><strong>I<sub>xc</sub>, I<sub>yc</sub></strong></td><td>Momenty bezwładności względem osi centralnych — miara odporności na zginanie.</td></tr>
-        <tr><td><strong>I<sub>xyc</sub></strong></td><td>Dewiacja — wskazuje asymetrię przekroju. Zerowa dla przekrojów symetrycznych.</td></tr>
+        <tr><td><strong>J<sub>x</sub>, J<sub>y</sub></strong></td><td>Momenty bezwładności względem osi centralnych — miara odporności na zginanie.</td></tr>
+        <tr><td><strong>J<sub>xy</sub></strong></td><td>Moment dewiacji — wskazuje asymetrię przekroju. Zerowy dla przekrojów symetrycznych.</td></tr>
         <tr><td><strong>θ<sub>p</sub></strong></td><td>Kąt główny — obrót od osi odniesienia do osi głównych bezwładności.</td></tr>
-        <tr><td><strong>I<sub>1</sub>, I<sub>2</sub></strong></td><td>Maksymalny i minimalny główny moment bezwładności.</td></tr>
+        <tr><td><strong>J<sub>1</sub>, J<sub>2</sub></strong></td><td>Maksymalny i minimalny główny moment bezwładności.</td></tr>
         <tr><td><strong>EOO</strong></td><td>Elastyczna oś obojętna — linia zerowego naprężenia przy zginaniu sprężystym.</td></tr>
         <tr><td><strong>POO</strong></td><td>Plastyczna oś obojętna — linia dzieląca przekrój na równe pola przy pełnej plastyczności.</td></tr>
         <tr><td><strong>Rdzeń</strong></td><td>Rdzeń przekroju — obszar, w którym przyłożenie obciążenia nie wywołuje rozciągania.</td></tr>
