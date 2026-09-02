@@ -1071,6 +1071,13 @@ input[type="range"]::-webkit-slider-thumb:hover {
   font-weight: 600;
 }
 
+.result-label sub {
+  font-size: 8.5px;
+  text-transform: lowercase;
+  vertical-align: sub;
+  line-height: 0;
+}
+
 .result-value {
   font-family: var(--font-display);
   font-size: 24px; /* Perfectly readable but space-saving */
