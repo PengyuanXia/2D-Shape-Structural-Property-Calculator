@@ -19,7 +19,7 @@ const state = {
   showKern: false,
   gridSnap: true,
   reverseX: false,
-  reverseY: true,
+  reverseY: false,
   drawNodeActive: false,
   
   // Canvas View State
@@ -83,8 +83,8 @@ const valIxy = document.getElementById('val-ixy');
 const valTheta = document.getElementById('val-theta');
 const valI1 = document.getElementById('val-i1');
 const valI2 = document.getElementById('val-i2');
-const valEnaPos = document.getElementById('val-ena-pos');
-const valPnaPos = document.getElementById('val-pna-pos');
+const valWel = document.getElementById('val-wel');
+const valWpl = document.getElementById('val-wpl');
 
 
 
@@ -689,14 +689,16 @@ function clipPolygonHalfPlane(polygon, A, B, C) {
   return result;
 }
 
-// --- PLASTIC NEUTRAL AXIS (PNA) ENGINE ---
+// --- PLASTIC & ELASTIC SECTION MODULI & PNA ENGINE ---
 
 /**
- * Calculates the PNA coordinate and endpoints.
- * Rotates the shape by -theta, finds the cut plane dividing area in half, and projects it back.
+ * Calculates Section Moduli (Elastic Wel and Plastic Wpl) for the cross-section
+ * along the given bending angle (defaulting to horizontal / major bending axis).
  */
-function calculatePNA(composite, bendingAngleDeg) {
-  if (!composite || composite.area === 0) return null;
+function calculateSectionModuli(composite, bendingAngleDeg = 0) {
+  if (!composite || composite.area === 0) {
+    return { wel: 0, wpl: 0, ptLeft: null, ptRight: null };
+  }
 
   const theta = (bendingAngleDeg * Math.PI) / 180;
   const cosT = Math.cos(-theta);
@@ -708,7 +710,6 @@ function calculatePNA(composite, bendingAngleDeg) {
     y: pt.x * sinT + pt.y * cosT
   });
 
-  // Rotate back by +theta
   const rotateBackPt = (pt) => {
     const cosPlus = Math.cos(theta);
     const sinPlus = Math.sin(theta);
@@ -722,7 +723,24 @@ function calculatePNA(composite, bendingAngleDeg) {
   const rotatedOuter = composite.outer.map(rotatePt);
   const rotatedHoles = composite.holes.map(hole => hole.map(rotatePt));
 
-  // 2. Find bounding box in y'
+  // 2. Elastic Section Modulus (Wel)
+  const rotatedCentroid = rotatePt({ x: composite.cx, y: composite.cy });
+  
+  // Find maximum fiber distance from centroid along the rotated y' direction
+  let maxFiberDist = 0;
+  for (const pt of rotatedOuter) {
+    const dist = Math.abs(pt.y - rotatedCentroid.y);
+    if (dist > maxFiberDist) maxFiberDist = dist;
+  }
+
+  const angleRad = (bendingAngleDeg * Math.PI) / 180;
+  const jBending = Math.max(0, composite.ix * Math.pow(Math.cos(angleRad), 2) +
+                              composite.iy * Math.pow(Math.sin(angleRad), 2) -
+                              2 * composite.ixy * Math.sin(angleRad) * Math.cos(angleRad));
+
+  const wel = maxFiberDist > 1e-6 ? (jBending / maxFiberDist) : 0;
+
+  // 3. Plastic Section Modulus (Wpl) & PNA
   let minY = Infinity;
   let maxY = -Infinity;
   for (const pt of rotatedOuter) {
@@ -730,45 +748,63 @@ function calculatePNA(composite, bendingAngleDeg) {
     if (pt.y > maxY) maxY = pt.y;
   }
 
-  // 3. Perform bisection search on y' split value
   let low = minY;
   let high = maxY;
   let mid = 0;
   const targetArea = composite.area / 2;
-  
-  // Helper to calculate clipped net area below horizontal cut y' = y_val
-  const getClippedArea = (y_val) => {
+
+  // Helper to get clipped properties below cut
+  const getClippedPropsBelow = (y_val) => {
     const clippedOuter = clipPolygonBelow(rotatedOuter, y_val);
-    let area = calculatePolygonBaseProperties(clippedOuter).area;
+    const outerProps = calculatePolygonBaseProperties(clippedOuter);
+    let area = outerProps.area;
+    let sumAy = outerProps.area * outerProps.cy;
+
     for (const rHole of rotatedHoles) {
       const clippedHole = clipPolygonBelow(rHole, y_val);
-      area -= calculatePolygonBaseProperties(clippedHole).area;
+      const holeProps = calculatePolygonBaseProperties(clippedHole);
+      area -= holeProps.area;
+      sumAy -= holeProps.area * holeProps.cy;
     }
-    return area;
+
+    const cy = area > 1e-6 ? (sumAy / area) : y_val;
+    return { area: Math.max(0, area), cy };
   };
 
   for (let iter = 0; iter < 40; iter++) {
     mid = (low + high) / 2;
-    const currentArea = getClippedArea(mid);
-    if (currentArea < targetArea) {
+    const currentProps = getClippedPropsBelow(mid);
+    if (currentProps.area < targetArea) {
       low = mid;
     } else {
       high = mid;
     }
   }
 
-  // The cut line in rotated coordinate space is y' = mid.
-  // In rotated space, the PNA line segment spans from x' = minX' to x' = maxX' at height y' = mid.
-  let minX = -10000;
-  let maxX = 10000;
+  // Bottom part properties below PNA
+  const botProps = getClippedPropsBelow(mid);
+  
+  // Top part properties above PNA
+  const areaTop = Math.max(0, composite.area - botProps.area);
+  const cyTop = areaTop > 1e-6 
+    ? (composite.area * rotatedCentroid.y - botProps.area * botProps.cy) / areaTop 
+    : mid;
 
-  const ptLeftRotated = { x: minX, y: mid };
-  const ptRightRotated = { x: maxX, y: mid };
+  // Wpl = A_bot * (y_pna - cy_bot) + A_top * (cy_top - y_pna)
+  const dBot = Math.abs(mid - botProps.cy);
+  const dTop = Math.abs(cyTop - mid);
+  const wpl = botProps.area * dBot + areaTop * dTop;
 
-  const ptLeft = rotateBackPt(ptLeftRotated);
-  const ptRight = rotateBackPt(ptRightRotated);
+  const minX = -10000;
+  const maxX = 10000;
+  const ptLeft = rotateBackPt({ x: minX, y: mid });
+  const ptRight = rotateBackPt({ x: maxX, y: mid });
 
-  return { ptLeft, ptRight };
+  return { wel, wpl, ptLeft, ptRight };
+}
+
+function calculatePNA(composite, bendingAngleDeg) {
+  return calculateSectionModuli(composite, bendingAngleDeg);
 }
 
 // --- KERN (CORE) ENGINE ---
@@ -987,6 +1023,47 @@ function resizeCanvas() {
 }
 
 /**
+ * Calculates adaptive major and minor grid steps based on the current zoom level.
+ * Ensures the screen distance between major grid lines remains balanced (~60-120px)
+ * with a minimal grid resolution clamped strictly to 1 unit.
+ */
+function getAdaptiveGridStep(zoom) {
+  const targetPx = 75; // Target distance in pixels between major grid lines
+  const rawStep = targetPx / Math.max(1e-4, zoom);
+  const power = Math.floor(Math.log10(rawStep));
+  const magnitude = Math.pow(10, power);
+  const normalized = rawStep / magnitude;
+
+  let majorStep;
+  let minorDivisions = 5;
+
+  if (normalized < 1.6) {
+    majorStep = 1 * magnitude;
+    minorDivisions = 5;
+  } else if (normalized < 3.8) {
+    majorStep = 2 * magnitude;
+    minorDivisions = 4;
+  } else if (normalized < 7.5) {
+    majorStep = 5 * magnitude;
+    minorDivisions = 5;
+  } else {
+    majorStep = 10 * magnitude;
+    minorDivisions = 5;
+  }
+
+  // Minimum grid resolution is strictly clamped to 1 unit (no sub-unit subdivisions)
+  let minorStep = Math.max(1, Math.round(majorStep / minorDivisions));
+  majorStep = Math.max(minorStep, Math.round(majorStep));
+
+  // If majorStep equals minorStep at minimum resolution, set major step to 5 for clean hierarchy
+  if (majorStep === minorStep && minorStep === 1) {
+    majorStep = 5;
+  }
+
+  return { majorStep, minorStep };
+}
+
+/**
  * Main draw pipeline.
  */
 function draw() {
@@ -994,65 +1071,82 @@ function draw() {
 
   // Set colors based on current theme
   const isDark = state.theme === 'dark';
-  const colorGridLine = isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)';
-  const colorGridAxis = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)';
+  const colorGridMinor = isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.035)';
+  const colorGridMajor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.09)';
+  const colorGridAxis = isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.3)';
   const colorText = isDark ? '#94a3b8' : '#475569';
 
-  // 1. Draw grid background
+  // 1. Draw adaptive grid background
   const originCanvas = gridToCanvas(0, 0);
-
-  // Grid step size (dynamically scale step size depending on zoom)
-  let step = 10;
-  if (state.zoom < 0.5) step = 100;
-  else if (state.zoom < 1.5) step = 50;
-  else if (state.zoom > 10.0) step = 5;
+  const { majorStep, minorStep } = getAdaptiveGridStep(state.zoom);
 
   const gridX1 = canvasToGrid(0, 0).x;
   const gridX2 = canvasToGrid(canvas.width, 0).x;
   const minX = Math.min(gridX1, gridX2);
   const maxX = Math.max(gridX1, gridX2);
-  const leftGrid = Math.floor(minX / step) * step;
-  const rightGrid = Math.ceil(maxX / step) * step;
+  const leftGrid = Math.floor(minX / minorStep) * minorStep;
+  const rightGrid = Math.ceil(maxX / minorStep) * minorStep;
 
   const gridY1 = canvasToGrid(0, 0).y;
   const gridY2 = canvasToGrid(0, canvas.height).y;
   const minY = Math.min(gridY1, gridY2);
   const maxY = Math.max(gridY1, gridY2);
-  const bottomGrid = Math.floor(minY / step) * step;
-  const topGrid = Math.ceil(maxY / step) * step;
+  const bottomGrid = Math.floor(minY / minorStep) * minorStep;
+  const topGrid = Math.ceil(maxY / minorStep) * minorStep;
 
-  ctx.lineWidth = 1;
-  
+  const decimals = majorStep >= 1 ? 0 : Math.max(0, -Math.floor(Math.log10(majorStep * 1.0001)));
+
+  const maxLines = 600;
+  const countX = Math.round((rightGrid - leftGrid) / minorStep);
+  const countY = Math.round((topGrid - bottomGrid) / minorStep);
+
   // Draw vertical gridlines
-  for (let x = leftGrid; x <= rightGrid; x += step) {
-    const cPt = gridToCanvas(x, 0);
-    ctx.strokeStyle = Math.abs(x) < 1e-5 ? colorGridAxis : colorGridLine;
-    ctx.beginPath();
-    ctx.moveTo(cPt.x, 0);
-    ctx.lineTo(cPt.x, canvas.height);
-    ctx.stroke();
+  if (countX > 0 && countX <= maxLines) {
+    for (let i = 0; i <= countX; i++) {
+      const x = leftGrid + i * minorStep;
+      const cPt = gridToCanvas(x, 0);
+      const isAxis = Math.abs(x) < 1e-5;
+      const isMajor = Math.abs(Math.round(x / majorStep) * majorStep - x) < 1e-4 * majorStep;
 
-    // Text labels for major steps
-    if (Math.abs(x) > 1e-5 && x % (step * 2) === 0) {
-      ctx.fillStyle = colorText;
-      ctx.font = '9px Space Grotesk';
-      ctx.fillText(x.toFixed(0), cPt.x + 4, originCanvas.y - 4);
+      ctx.strokeStyle = isAxis ? colorGridAxis : (isMajor ? colorGridMajor : colorGridMinor);
+      ctx.lineWidth = isAxis ? 1.5 : 1;
+      ctx.beginPath();
+      ctx.moveTo(cPt.x, 0);
+      ctx.lineTo(cPt.x, canvas.height);
+      ctx.stroke();
+
+      // Text labels for major steps
+      if (isMajor && !isAxis) {
+        ctx.fillStyle = colorText;
+        ctx.font = '9px Space Grotesk';
+        const labelY = Math.max(12, Math.min(canvas.height - 12, originCanvas.y - 4));
+        ctx.fillText((Math.round(x / majorStep) * majorStep).toFixed(decimals), cPt.x + 4, labelY);
+      }
     }
   }
 
   // Draw horizontal gridlines
-  for (let y = bottomGrid; y <= topGrid; y += step) {
-    const cPt = gridToCanvas(0, y);
-    ctx.strokeStyle = Math.abs(y) < 1e-5 ? colorGridAxis : colorGridLine;
-    ctx.beginPath();
-    ctx.moveTo(0, cPt.y);
-    ctx.lineTo(canvas.width, cPt.y);
-    ctx.stroke();
+  if (countY > 0 && countY <= maxLines) {
+    for (let j = 0; j <= countY; j++) {
+      const y = bottomGrid + j * minorStep;
+      const cPt = gridToCanvas(0, y);
+      const isAxis = Math.abs(y) < 1e-5;
+      const isMajor = Math.abs(Math.round(y / majorStep) * majorStep - y) < 1e-4 * majorStep;
 
-    if (Math.abs(y) > 1e-5 && y % (step * 2) === 0) {
-      ctx.fillStyle = colorText;
-      ctx.font = '9px Space Grotesk';
-      ctx.fillText(y.toFixed(0), originCanvas.x + 4, cPt.y - 4);
+      ctx.strokeStyle = isAxis ? colorGridAxis : (isMajor ? colorGridMajor : colorGridMinor);
+      ctx.lineWidth = isAxis ? 1.5 : 1;
+      ctx.beginPath();
+      ctx.moveTo(0, cPt.y);
+      ctx.lineTo(canvas.width, cPt.y);
+      ctx.stroke();
+
+      // Text labels for major steps
+      if (isMajor && !isAxis) {
+        ctx.fillStyle = colorText;
+        ctx.font = '9px Space Grotesk';
+        const labelX = Math.max(4, Math.min(canvas.width - 40, originCanvas.x + 4));
+        ctx.fillText((Math.round(y / majorStep) * majorStep).toFixed(decimals), labelX, cPt.y - 4);
+      }
     }
   }
 
@@ -1293,15 +1387,16 @@ function draw() {
     ctx.stroke();
 
     // Label ENA
+    const enaEquation = getLineEquationString(enaAngleGlobal, { x: composite.cx, y: composite.cy });
     ctx.fillStyle = '#ef4444';
-    ctx.font = 'bold 12px Space Grotesk';
-    ctx.fillText('ENA', cPt.x + 80 * cosENA + 6, cPt.y - 80 * sinENA - 6);
+    ctx.font = 'bold 11px Space Grotesk';
+    ctx.fillText(`ENA: ${enaEquation}`, cPt.x + 80 * cosENA + 6, cPt.y - 80 * sinENA - 6);
   }
 
   // 7. Draw Plastic Neutral Axis (PNA)
   if (state.showPNA) {
     const pnaLine = calculatePNA(composite, state.bendingAngle);
-    if (pnaLine) {
+    if (pnaLine && pnaLine.ptLeft) {
       const ptLeftC = gridToCanvas(pnaLine.ptLeft.x, pnaLine.ptLeft.y);
       const ptRightC = gridToCanvas(pnaLine.ptRight.x, pnaLine.ptRight.y);
 
@@ -1314,21 +1409,21 @@ function draw() {
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Label PNA
+      // Label PNA and its line equation on canvas
+      const pnaAngleRad = (state.bendingAngle * Math.PI) / 180;
+      const pnaEquation = getLineEquationString(pnaAngleRad, pnaLine.ptLeft);
       ctx.fillStyle = '#3b82f6';
-      ctx.font = 'bold 12px Space Grotesk';
-      // Find midpoint or slightly offset label
+      ctx.font = 'bold 11px Space Grotesk';
       const midX = (ptLeftC.x + ptRightC.x) / 2;
       const midY = (ptLeftC.y + ptRightC.y) / 2;
       
-      // Compute perpendicular offset to place PNA label
       const dx = ptRightC.x - ptLeftC.x;
       const dy = ptRightC.y - ptLeftC.y;
-      const len = Math.sqrt(dx*dx + dy*dy);
+      const len = Math.sqrt(dx*dx + dy*dy) || 1;
       const px = -dy / len;
       const py = dx / len;
 
-      ctx.fillText('PNA', midX + px * 15 - 10, midY + py * 15 + 3);
+      ctx.fillText(`PNA: ${pnaEquation}`, midX + px * 16 - 20, midY + py * 16 + 12);
     }
   }
 }
@@ -1361,9 +1456,8 @@ function updateResults(props) {
     valTheta.textContent = '0.0°';
     valI1.textContent = '0.00';
     valI2.textContent = '0.00';
-    if (valEnaPos) valEnaPos.textContent = 'y = 0.00x + 0.00';
-    if (valPnaPos) valPnaPos.textContent = 'y = 0.00x + 0.00';
-    
+    if (valWel) valWel.textContent = '0.00';
+    if (valWpl) valWpl.textContent = '0.00';
     return;
   }
 
@@ -1376,41 +1470,14 @@ function updateResults(props) {
   valI1.textContent = props.i1.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
   valI2.textContent = props.i2.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
 
-  // Calculate ENA global angle
-  const angleRad = (state.bendingAngle * Math.PI) / 180;
-  const bendingWrtPrincipal = angleRad - props.theta_p_rad;
-  let enaAngleGlobal = 0;
-  if (Math.abs(props.i2) > 1e-6) {
-    const alpha = Math.atan2(props.i1 * Math.sin(bendingWrtPrincipal), props.i2 * Math.cos(bendingWrtPrincipal));
-    enaAngleGlobal = props.theta_p_rad + alpha;
-  } else {
-    enaAngleGlobal = angleRad;
+  // Calculate Section Moduli (Wel & Wpl)
+  const moduli = calculateSectionModuli(props, state.bendingAngle);
+  if (valWel) {
+    valWel.textContent = moduli.wel.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
   }
-
-  const enaEquation = getLineEquationString(enaAngleGlobal, { x: props.cx, y: props.cy });
-  let enaAngleDeg = (enaAngleGlobal * 180 / Math.PI) % 180;
-  if (enaAngleDeg < 0) enaAngleDeg += 180;
-  if (valEnaPos) {
-    valEnaPos.textContent = `${enaEquation} (${enaAngleDeg.toFixed(0)}°)`;
+  if (valWpl) {
+    valWpl.textContent = moduli.wpl.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
   }
-
-  // Calculate PNA line equation
-  const pnaLine = calculatePNA(props, state.bendingAngle);
-  let pnaEquation = 'y = 0.00x + 0.00';
-  let pnaAngleDeg = state.bendingAngle % 180;
-  if (pnaAngleDeg < 0) pnaAngleDeg += 180;
-
-  if (pnaLine) {
-    const pnaAngleRad = (state.bendingAngle * Math.PI) / 180;
-    pnaEquation = getLineEquationString(pnaAngleRad, pnaLine.ptLeft);
-    if (valPnaPos) {
-      valPnaPos.textContent = `${pnaEquation} (${pnaAngleDeg.toFixed(0)}°)`;
-    }
-  } else if (valPnaPos) {
-    valPnaPos.textContent = 'y = 0.00x + 0.00';
-  }
-
-
 }
 
 // --- ACCORDION LIST BUILDERS ---
@@ -1516,13 +1583,16 @@ function setupCanvasEvents() {
     const my = e.clientY - rect.top;
 
     let gridPt = canvasToGrid(mx, my);
+    const { minorStep } = getAdaptiveGridStep(state.zoom);
 
     if (state.gridSnap) {
-      gridPt.x = Math.round(gridPt.x / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
-      gridPt.y = Math.round(gridPt.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+      gridPt.x = Math.round(gridPt.x / minorStep) * minorStep;
+      gridPt.y = Math.round(gridPt.y / minorStep) * minorStep;
     }
 
-    cursorDisplay.textContent = `X: ${gridPt.x.toFixed(1)}, Y: ${gridPt.y.toFixed(1)}`;
+    cursorDisplay.textContent = state.gridSnap
+      ? `X: ${gridPt.x.toFixed(0)}, Y: ${gridPt.y.toFixed(0)}`
+      : `X: ${gridPt.x.toFixed(1)}, Y: ${gridPt.y.toFixed(1)}`;
 
     if (state.isPanning) {
       if (Math.hypot(e.clientX - startX, e.clientY - startY) > 5) {
@@ -1568,8 +1638,9 @@ function setupCanvasEvents() {
         let gridPt = canvasToGrid(mx, my);
 
         if (state.gridSnap) {
-          gridPt.x = Math.round(gridPt.x / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
-          gridPt.y = Math.round(gridPt.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+          const { minorStep } = getAdaptiveGridStep(state.zoom);
+          gridPt.x = Math.round(gridPt.x / minorStep) * minorStep;
+          gridPt.y = Math.round(gridPt.y / minorStep) * minorStep;
         }
 
         handleDrawingPlacement(gridPt);
@@ -1591,7 +1662,7 @@ function setupCanvasEvents() {
 
     // Zoom multiplier
     const factor = e.deltaY < 0 ? 1.15 : 0.85;
-    state.zoom = Math.max(0.2, Math.min(50.0, state.zoom * factor));
+    state.zoom = Math.max(0.05, Math.min(300.0, state.zoom * factor));
 
     // Shift pan offset to preserve cursor grid position after zoom
     const cx = canvas.width / 2;
@@ -1649,11 +1720,14 @@ function setupCanvasEvents() {
       const mx = t.clientX - rect.left;
       const my = t.clientY - rect.top;
       let gridPt = canvasToGrid(mx, my);
+      const { minorStep } = getAdaptiveGridStep(state.zoom);
       if (state.gridSnap) {
-        gridPt.x = Math.round(gridPt.x / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
-        gridPt.y = Math.round(gridPt.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+        gridPt.x = Math.round(gridPt.x / minorStep) * minorStep;
+        gridPt.y = Math.round(gridPt.y / minorStep) * minorStep;
       }
-      cursorDisplay.textContent = `X: ${gridPt.x.toFixed(1)}, Y: ${gridPt.y.toFixed(1)}`;
+      cursorDisplay.textContent = state.gridSnap
+        ? `X: ${gridPt.x.toFixed(0)}, Y: ${gridPt.y.toFixed(0)}`
+        : `X: ${gridPt.x.toFixed(1)}, Y: ${gridPt.y.toFixed(1)}`;
 
       draw();
     } else if (e.touches.length === 2) {
@@ -1662,7 +1736,7 @@ function setupCanvasEvents() {
       const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
       if (touchInitialDist > 0) {
         const factor = dist / touchInitialDist;
-        state.zoom = Math.max(0.2, Math.min(50.0, touchInitialZoom * factor));
+        state.zoom = Math.max(0.05, Math.min(300.0, touchInitialZoom * factor));
         draw();
       }
     }
@@ -1680,8 +1754,9 @@ function setupCanvasEvents() {
         let gridPt = canvasToGrid(mx, my);
 
         if (state.gridSnap) {
-          gridPt.x = Math.round(gridPt.x / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
-          gridPt.y = Math.round(gridPt.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE;
+          const { minorStep } = getAdaptiveGridStep(state.zoom);
+          gridPt.x = Math.round(gridPt.x / minorStep) * minorStep;
+          gridPt.y = Math.round(gridPt.y / minorStep) * minorStep;
         }
 
         handleDrawingPlacement(gridPt);
@@ -1880,7 +1955,7 @@ btnFitZoom.addEventListener('click', () => {
  */
 function zoomRelativeToCenter(factor) {
   const oldZoom = state.zoom;
-  state.zoom = Math.max(0.1, Math.min(100.0, state.zoom * factor));
+  state.zoom = Math.max(0.05, Math.min(300.0, state.zoom * factor));
   const ratio = state.zoom / oldZoom;
   state.panX *= ratio;
   state.panY *= ratio;

@@ -91,8 +91,8 @@ const translations = {
     'result.theta.label': 'Principal Angle (θ<sub>p</sub>)',
     'result.i1.label': 'Max Principal Moment (J<sub>1</sub>)',
     'result.i2.label': 'Min Principal Moment (J<sub>2</sub>)',
-    'result.ena.label': 'Elastic Neutral Axis (ENA)',
-    'result.pna.label': 'Plastic Neutral Axis (PNA)',
+    'result.wel.label': 'Elastic Section Modulus (Wel)',
+    'result.wpl.label': 'Plastic Section Modulus (Wpl)',
 
     // Result cards — descriptions
     'result.area.desc': 'Net area of the cross section',
@@ -103,8 +103,8 @@ const translations = {
     'result.theta.desc': 'Rotation to principal axes',
     'result.i1.desc': 'Maximum bending stiffness',
     'result.i2.desc': 'Minimum bending stiffness',
-    'result.ena.desc': 'Elastic bending zero-stress line',
-    'result.pna.desc': 'Equal net area splitting line',
+    'result.wel.desc': 'Elastic bending resistance',
+    'result.wpl.desc': 'Full plastic capacity',
 
     // Preset modal
     'modal.presetTitle': 'Preset Dimensions',
@@ -236,8 +236,8 @@ const translations = {
         <tr><td><strong>J<sub>xy</sub></strong></td><td>Product of inertia — indicates section asymmetry. Zero for symmetric shapes.</td></tr>
         <tr><td><strong>θ<sub>p</sub></strong></td><td>Principal angle — rotation from reference axes to principal axes.</td></tr>
         <tr><td><strong>J<sub>1</sub>, J<sub>2</sub></strong></td><td>Maximum and minimum principal moments of inertia.</td></tr>
-        <tr><td><strong>ENA</strong></td><td>Elastic Neutral Axis — zero-stress line under elastic bending.</td></tr>
-        <tr><td><strong>PNA</strong></td><td>Plastic Neutral Axis — line dividing the section into equal areas for full plastic capacity.</td></tr>
+        <tr><td><strong>Wel</strong></td><td>Elastic Section Modulus — measure of elastic bending resistance (Wel = J / z_max).</td></tr>
+        <tr><td><strong>Wpl</strong></td><td>Plastic Section Modulus — measure of full plastic bending capacity (Wpl = S1 + S2).</td></tr>
         <tr><td><strong>Kern</strong></td><td>Cross-section core — region where load application produces no tension.</td></tr>
       </table>
     `,
@@ -327,8 +327,8 @@ const translations = {
     'result.theta.label': 'Kąt główny (θ<sub>p</sub>)',
     'result.i1.label': 'Maks. moment główny (J<sub>1</sub>)',
     'result.i2.label': 'Min. moment główny (J<sub>2</sub>)',
-    'result.ena.label': 'Elastyczna oś obojętna (EOO)',
-    'result.pna.label': 'Plastyczna oś obojętna (POO)',
+    'result.wel.label': 'Sprężysty wskaźnik wytrzymałości (Wel)',
+    'result.wpl.label': 'Plastyczny wskaźnik wytrzymałości (Wpl)',
 
     // Result cards — descriptions
     'result.area.desc': 'Pole netto przekroju poprzecznego',
@@ -339,8 +339,8 @@ const translations = {
     'result.theta.desc': 'Obrót do osi głównych',
     'result.i1.desc': 'Maksymalna sztywność zginania',
     'result.i2.desc': 'Minimalna sztywność zginania',
-    'result.ena.desc': 'Linia zerowego naprężenia przy zginaniu sprężystym',
-    'result.pna.desc': 'Linia podziału na równe pola przy pełnej plastyczności',
+    'result.wel.desc': 'Sprężysta odporność na zginanie',
+    'result.wpl.desc': 'Plastyczna nośność przekroju',
 
     // Preset modal
     'modal.presetTitle': 'Wymiary szablonu',
@@ -472,8 +472,8 @@ const translations = {
         <tr><td><strong>J<sub>xy</sub></strong></td><td>Moment dewiacji — wskazuje asymetrię przekroju. Zerowy dla przekrojów symetrycznych.</td></tr>
         <tr><td><strong>θ<sub>p</sub></strong></td><td>Kąt główny — obrót od osi odniesienia do osi głównych bezwładności.</td></tr>
         <tr><td><strong>J<sub>1</sub>, J<sub>2</sub></strong></td><td>Maksymalny i minimalny główny moment bezwładności.</td></tr>
-        <tr><td><strong>EOO</strong></td><td>Elastyczna oś obojętna — linia zerowego naprężenia przy zginaniu sprężystym.</td></tr>
-        <tr><td><strong>POO</strong></td><td>Plastyczna oś obojętna — linia dzieląca przekrój na równe pola przy pełnej plastyczności.</td></tr>
+        <tr><td><strong>Wel</strong></td><td>Sprężysty wskaźnik wytrzymałości na zginanie (Wel = J / z_max).</td></tr>
+        <tr><td><strong>Wpl</strong></td><td>Plastyczny wskaźnik wytrzymałości na zginanie (Wpl = S1 + S2).</td></tr>
         <tr><td><strong>Rdzeń</strong></td><td>Rdzeń przekroju — obszar, w którym przyłożenie obciążenia nie wywołuje rozciągania.</td></tr>
       </table>
     `,

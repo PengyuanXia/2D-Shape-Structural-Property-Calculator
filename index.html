@@ -250,15 +250,15 @@
             </div>
 
             <div class="result-card accent-card" style="border-left-color: #ef4444;">
-              <div class="result-label" data-i18n="result.ena.label">Elastic Neutral Axis (ENA)</div>
-              <div class="result-value" id="val-ena-pos" style="font-size: 15px;">y = 0.00x + 0.00</div>
-              <div class="result-desc" data-i18n="result.ena.desc">Elastic bending zero-stress line</div>
+              <div class="result-label" data-i18n-html="result.wel.label">Elastic Section Modulus (Wel)</div>
+              <div class="result-value" id="val-wel">0.00</div>
+              <div class="result-desc" data-i18n="result.wel.desc">Elastic bending resistance</div>
             </div>
 
             <div class="result-card accent-card" style="border-left-color: #3b82f6;">
-              <div class="result-label" data-i18n="result.pna.label">Plastic Neutral Axis (PNA)</div>
-              <div class="result-value" id="val-pna-pos" style="font-size: 15px;">y = 0.00x + 0.00</div>
-              <div class="result-desc" data-i18n="result.pna.desc">Equal net area splitting line</div>
+              <div class="result-label" data-i18n-html="result.wpl.label">Plastic Section Modulus (Wpl)</div>
+              <div class="result-value" id="val-wpl">0.00</div>
+              <div class="result-desc" data-i18n="result.wpl.desc">Plastic bending capacity</div>
             </div>
 
           </div>
@@ -310,7 +310,7 @@
                 <span data-i18n="hud.reverseX">Reverse X (+ Left)</span>
               </label>
               <label class="toggle-item">
-                <input type="checkbox" id="toggle-reverse-y" checked>
+                <input type="checkbox" id="toggle-reverse-y">
                 <span class="checkbox-custom"></span>
                 <span data-i18n="hud.reverseY">Reverse Y (+ Up)</span>
               </label>
@@ -493,7 +493,7 @@
     </div>
   </div>
 
-  <script src="i18n.js"></script>
-  <script src="app.js"></script>
+  <script src="i18n.js?v=2.1"></script>
+  <script src="app.js?v=2.1"></script>
 </body>
 </html>
