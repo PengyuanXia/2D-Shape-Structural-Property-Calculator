@@ -31,7 +31,7 @@ const state = {
   dragStartY: 0,
   
   // Themes
-  theme: 'dark',
+  theme: 'light',
   lang: 'en',
   welcomeDismissed: false
 };
@@ -1071,10 +1071,10 @@ function draw() {
 
   // Set colors based on current theme
   const isDark = state.theme === 'dark';
-  const colorGridMinor = isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.035)';
-  const colorGridMajor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.09)';
-  const colorGridAxis = isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.3)';
-  const colorText = isDark ? '#94a3b8' : '#475569';
+  const colorGridMinor = isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(15, 23, 42, 0.09)';
+  const colorGridMajor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(15, 23, 42, 0.24)';
+  const colorGridAxis = isDark ? 'rgba(255, 255, 255, 0.40)' : 'rgba(15, 23, 42, 0.70)';
+  const colorText = isDark ? '#94a3b8' : '#334155';
 
   // 1. Draw adaptive grid background
   const originCanvas = gridToCanvas(0, 0);

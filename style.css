@@ -198,7 +198,7 @@ body.light-theme .moon-icon {
 /* Main Workspace Grid */
 .app-main-grid {
   display: grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 290px 1fr;
   grid-template-rows: 100%;
   flex: 1;
   overflow: hidden;
@@ -219,8 +219,8 @@ body.light-theme .moon-icon {
   backdrop-filter: blur(var(--blur-val));
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
+  gap: 14px;
+  padding: 14px 12px;
   padding-bottom: 50px; /* Generous bottom spacing so nothing is ever hidden or cut off */
   height: 100%;
   max-height: 100%;
@@ -801,7 +801,38 @@ input[type="range"]::-webkit-slider-thumb:hover {
   justify-content: space-between;
   padding: 0 20px;
   border-bottom: 1px solid var(--border-color);
-  background-color: rgba(255, 255, 255, 0.01);
+  background-color: rgba(13, 19, 33, 0.95);
+  z-index: 10;
+}
+
+body.light-theme .canvas-toolbar {
+  background-color: #cbd5e1 !important;
+  border-bottom: 2px solid #94a3b8 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .canvas-toolbar .coords-display {
+  color: #334155;
+}
+
+body.light-theme .canvas-toolbar .coord-val {
+  color: #0f172a;
+}
+
+body.light-theme .canvas-toolbar .btn,
+body.light-theme .canvas-toolbar .btn-sidebar-toggle,
+body.light-theme .canvas-toolbar .btn-results-toggle {
+  background-color: #ffffff;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+body.light-theme .canvas-toolbar .btn:hover,
+body.light-theme .canvas-toolbar .btn-sidebar-toggle:hover,
+body.light-theme .canvas-toolbar .btn-results-toggle:hover {
+  background-color: #f8fafc;
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
 }
 
 .coords-display {
@@ -1040,7 +1071,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
     grid-template-columns: repeat(2, 1fr);
   }
   .app-main-grid {
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 260px 1fr;
   }
 }
 
@@ -1895,26 +1926,59 @@ body.light-theme .kofi-action-btn:hover {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  color: var(--text-secondary);
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s ease;
   pointer-events: auto;
 }
 
-.btn-draw-node:hover {
-  color: var(--text-main);
-  border-color: var(--text-main);
-  transform: scale(1.03);
+/* Day (Light) Mode: Dark button contrasting against light canvas */
+body.light-theme .btn-draw-node {
+  color: #f1f5f9;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.btn-draw-node.active {
-  color: var(--accent-primary);
+body.light-theme .btn-draw-node:hover {
+  color: #ffffff;
+  background-color: #1e293b;
   border-color: var(--accent-primary);
-  background: rgba(99, 102, 241, 0.1);
-  box-shadow: 0 0 8px rgba(99, 102, 241, 0.25);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme .btn-draw-node.active {
+  color: #ffffff;
+  border-color: var(--accent-primary);
+  background-color: var(--accent-primary);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.45);
+}
+
+/* Night (Dark) Mode: Lighter crisp button contrasting against dark canvas */
+body.dark-theme .btn-draw-node,
+body:not(.light-theme) .btn-draw-node {
+  color: #0f172a;
+  background-color: #e2e8f0;
+  border: 1px solid #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+body.dark-theme .btn-draw-node:hover,
+body:not(.light-theme) .btn-draw-node:hover {
+  color: #000000;
+  background-color: #ffffff;
+  border-color: var(--accent-secondary);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-theme .btn-draw-node.active,
+body:not(.light-theme) .btn-draw-node.active {
+  color: #ffffff;
+  border-color: var(--accent-primary);
+  background-color: var(--accent-primary);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.55);
 }
 
 /* ==========================================================================
