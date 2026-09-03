@@ -854,13 +854,17 @@ body.light-theme .canvas-toolbar .btn-results-toggle:hover {
 
 .coords-display {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .coord-val {
   color: var(--accent-secondary);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .canvas-controls {
@@ -1906,13 +1910,35 @@ body.light-theme .kofi-action-btn:hover {
   border-radius: 3px;
 }
 
-/* Draw Node Hint */
+/* Draw Node Hint (Enlarged prominent badge fitting the 48px bar) */
 .draw-node-hint {
-  margin-left: 6px;
-  font-size: 11px;
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--accent-primary);
-  opacity: 0.8;
-  animation: hintPulse 2s ease-in-out infinite;
+  background-color: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.2;
+  white-space: nowrap;
+  animation: hintPulse 2.5s ease-in-out infinite;
+}
+
+body.light-theme .draw-node-hint {
+  color: #3730a3;
+  background-color: #e0e7ff;
+  border-color: #a5b4fc;
+}
+
+body.dark-theme .draw-node-hint,
+body:not(.light-theme) .draw-node-hint {
+  color: #c7d2fe;
+  background-color: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.45);
 }
 
 .draw-node-hint.hidden {
@@ -1974,24 +2000,42 @@ body.light-theme .kofi-action-btn:hover {
   color: var(--accent-danger);
 }
 
-/* Draw Node button styling */
+/* Draw Node button styling (Enlarged Prominent CTA) */
+.btn-canvas-action.btn-draw-node {
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-md);
+  gap: 9px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.btn-canvas-action.btn-draw-node svg {
+  width: 18px;
+  height: 18px;
+}
+
 body.light-theme .btn-canvas-action.btn-draw-node {
   color: #f1f5f9;
   background-color: #0f172a;
   border: 1px solid #334155;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
 }
 
 body.light-theme .btn-canvas-action.btn-draw-node:hover {
   color: #ffffff;
   background-color: #1e293b;
   border-color: var(--accent-primary);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
 }
 
 body.light-theme .btn-canvas-action.btn-draw-node.active {
   color: #ffffff;
   background-color: var(--accent-primary);
   border-color: var(--accent-primary);
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.55);
 }
 
 body.dark-theme .btn-canvas-action.btn-draw-node,
@@ -1999,6 +2043,7 @@ body:not(.light-theme) .btn-canvas-action.btn-draw-node {
   color: #0f172a;
   background-color: #e2e8f0;
   border: 1px solid #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
 body.dark-theme .btn-canvas-action.btn-draw-node:hover,
@@ -2006,6 +2051,8 @@ body:not(.light-theme) .btn-canvas-action.btn-draw-node:hover {
   color: #000000;
   background-color: #ffffff;
   border-color: var(--accent-secondary);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.65);
 }
 
 body.dark-theme .btn-canvas-action.btn-draw-node.active,
@@ -2013,7 +2060,7 @@ body:not(.light-theme) .btn-canvas-action.btn-draw-node.active {
   color: #ffffff;
   background-color: var(--accent-primary);
   border-color: var(--accent-primary);
-  box-shadow: 0 0 16px rgba(99, 102, 241, 0.55);
+  box-shadow: 0 0 22px rgba(99, 102, 241, 0.65);
 }
 
 

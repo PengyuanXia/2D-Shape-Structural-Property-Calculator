@@ -71,7 +71,7 @@ const translations = {
     'canvas.snapToGrid': 'Snap to Grid',
     'canvas.fitShape': 'Fit Shape',
     'canvas.drawNode': 'Draw Node',
-    'canvas.drawNodeHint': '│ Enable "Draw Node" to place points',
+    'canvas.drawNodeHint': 'Enable "Draw Node" to place points',
 
     // HUD
     'hud.axisDirection': 'Axis Direction',
@@ -311,7 +311,7 @@ const translations = {
     'canvas.snapToGrid': 'Przyciągaj do siatki',
     'canvas.fitShape': 'Dopasuj widok',
     'canvas.drawNode': 'Rysuj węzeł',
-    'canvas.drawNodeHint': '│ Włącz „Rysuj węzeł" aby stawiać punkty',
+    'canvas.drawNodeHint': 'Włącz „Rysuj węzeł", aby stawiać punkty',
 
     // HUD
     'hud.axisDirection': 'Kierunek osi',
