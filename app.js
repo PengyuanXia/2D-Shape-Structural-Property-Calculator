@@ -1884,17 +1884,29 @@ btnDrawHole.addEventListener('click', () => {
   btnDrawOuter.classList.remove('active');
 });
 
-// Clear current button
-btnClearCurrent.addEventListener('click', () => {
+// Clear / Cancel current active drawing
+function cancelActive() {
   if (state.drawingMode === 'OUTER') {
-    state.outerBoundary = [];
-    state.outerClosed = false;
-    btnDrawHole.disabled = true;
-  } else {
+    if (!state.outerClosed) {
+      state.outerBoundary = [];
+      btnDrawHole.disabled = true;
+    }
+  } else if (state.drawingMode === 'HOLE') {
     state.activeHole = [];
   }
   updateCoordsLists();
   draw();
+}
+
+if (btnClearCurrent) {
+  btnClearCurrent.addEventListener('click', cancelActive);
+}
+
+// Global ESC key to cancel active drawing
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    cancelActive();
+  }
 });
 
 // Reset all button

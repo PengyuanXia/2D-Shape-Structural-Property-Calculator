@@ -40,9 +40,13 @@ const translations = {
     'tools.closeActiveHole': 'Close Active Hole',
 
     // Action buttons
-    'action.clearActive': 'Clear Active',
-    'action.clearAll': 'Clear All',
-    'action.undo': 'Undo',
+    'action.clearActive': 'Cancel Active (Esc)',
+    'action.clearCanvas': 'Clear Canvas',
+    'action.clearAll': 'Clear Canvas',
+    'action.undo': 'Undo (Ctrl+Z)',
+    'tip.undo': 'Undo last step (Ctrl+Z)',
+    'tip.clearCanvas': 'Clear entire canvas',
+    'tip.cancelActive': 'Cancel active drawing (Esc)',
 
     // Visualizations
     'viz.title': 'Visualization Items',
@@ -276,9 +280,13 @@ const translations = {
     'tools.closeActiveHole': 'Zamknij otwór',
 
     // Action buttons
-    'action.clearActive': 'Wyczyść aktywny',
-    'action.clearAll': 'Wyczyść wszystko',
-    'action.undo': 'Cofnij',
+    'action.clearActive': 'Anuluj aktywny (Esc)',
+    'action.clearCanvas': 'Wyczyść płótno',
+    'action.clearAll': 'Wyczyść płótno',
+    'action.undo': 'Cofnij (Ctrl+Z)',
+    'tip.undo': 'Cofnij ostatni krok (Ctrl+Z)',
+    'tip.clearCanvas': 'Wyczyść całe płótno',
+    'tip.cancelActive': 'Anuluj aktywne rysowanie (Esc)',
 
     // Visualizations
     'viz.title': 'Elementy wizualizacji',
