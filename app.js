@@ -1023,6 +1023,18 @@ function resizeCanvas() {
 }
 
 /**
+ * Sets the viewport so that the original visible X grid area spans from -20 to 20.
+ */
+function setInitialViewport() {
+  const rect = container ? container.getBoundingClientRect() : null;
+  const w = (rect && rect.width > 0) ? rect.width : (canvas.width > 0 ? canvas.width : 800);
+  // Total X range = 40 units (-20 to +20)
+  state.zoom = w / 40;
+  state.panX = 0;
+  state.panY = 0;
+}
+
+/**
  * Calculates adaptive major and minor grid steps based on the current zoom level.
  * Ensures the screen distance between major grid lines remains balanced (~60-120px)
  * with a minimal grid resolution clamped strictly to 1 unit.
@@ -1941,22 +1953,27 @@ btnFitZoom.addEventListener('click', () => {
     if (v.y > maxY) maxY = v.y;
   });
 
-  const W = maxX - minX;
-  const H = maxY - minY;
+  const W = Math.max(1, maxX - minX);
+  const H = Math.max(1, maxY - minY);
 
-  // Find optimal zoom (scaled down by 1.5 for additional zoom-out margin)
-  const zoomX = (canvas.width - 120) / (W > 0 ? W : 10);
-  const zoomY = (canvas.height - 120) / (H > 0 ? H : 10);
-  state.zoom = Math.max(0.5, Math.min(25.0, Math.min(zoomX, zoomY))) / 1.5;
+  // Available drawing area with comfortable padding
+  const padX = 140;
+  const padY = 120;
+  const availW = Math.max(80, canvas.width - padX);
+  const availH = Math.max(80, canvas.height - padY);
 
-    // Center on composite bounding center
-    const targetCX = (minX + maxX) / 2;
-    const targetCY = (minY + maxY) / 2;
-    
-    const multX = state.reverseX ? -1 : 1;
-    const multY = state.reverseY ? -1 : 1;
-    state.panX = -targetCX * state.zoom * multX;
-    state.panY = -targetCY * state.zoom * multY;
+  const rawZoom = Math.min(availW / W, availH / H);
+  // Scale with 80% fill ratio so shapes have breathing room, supporting high zoom for small shapes up to 100 px/unit
+  state.zoom = Math.max(0.1, Math.min(100.0, rawZoom * 0.8));
+
+  // Center on composite bounding center
+  const targetCX = (minX + maxX) / 2;
+  const targetCY = (minY + maxY) / 2;
+  
+  const multX = state.reverseX ? -1 : 1;
+  const multY = state.reverseY ? -1 : 1;
+  state.panX = -targetCX * state.zoom * multX;
+  state.panY = -targetCY * state.zoom * multY;
 
   draw();
 });
@@ -2195,7 +2212,6 @@ if (btnManualAdd) {
       const duplicate = state.outerBoundary.some(v => v.x === pt.x && v.y === pt.y);
       if (!duplicate) {
         state.outerBoundary.push(pt);
-        closeOverlay();
       }
     } else if (state.drawingMode === 'HOLE') {
       if (!state.outerClosed) return;
@@ -2566,6 +2582,9 @@ function toggleResults() {
 if (btnToggleResults) btnToggleResults.addEventListener('click', toggleResults);
 if (btnFoldResultsHeader) btnFoldResultsHeader.addEventListener('click', foldResults);
 
-// --- INITIAL LANGUAGE APPLICATION ---
+// --- INITIAL STARTUP & VIEWPORT CONFIGURATION ---
 applyLanguage(state.lang);
+resizeCanvas();
+setInitialViewport();
+draw();
 
