@@ -1474,7 +1474,7 @@ function updateResults(props) {
   }
 
   valArea.textContent = props.area.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  valCentroid.textContent = `${props.cx.toFixed(1)}, ${props.cy.toFixed(1)}`;
+  valCentroid.textContent = `${props.cx.toFixed(2)}, ${props.cy.toFixed(2)}`;
   valIx.textContent = props.ix.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
   valIy.textContent = props.iy.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
   valIxy.textContent = props.ixy.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
