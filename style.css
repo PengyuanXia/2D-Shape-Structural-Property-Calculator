@@ -226,33 +226,25 @@ body.light-theme .moon-icon {
   grid-template-columns: 0px 1fr !important;
 }
 
-/* Left Sidebar Panel */
+/* Left Sidebar Panel Container */
 .left-panel {
   background-color: var(--bg-panel);
   border-right: 1px solid var(--border-color);
   backdrop-filter: blur(var(--blur-val));
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 14px 12px;
-  padding-bottom: 50px; /* Generous bottom spacing so nothing is ever hidden or cut off */
   height: 100%;
   max-height: 100%;
-  min-height: 0; /* CRITICAL: allows grid child to shrink and enable scrolling */
-  overflow-y: scroll !important; /* Force scroller to always be available */
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
   min-width: 0;
   box-sizing: border-box;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-primary) rgba(0, 0, 0, 0.3);
-  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, border-color 0.3s ease;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, border-color 0.3s ease;
 }
 
 .app-main-grid.sidebar-collapsed .left-panel {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding: 0 !important;
   opacity: 0;
   pointer-events: none;
   border-right-color: transparent;
@@ -260,14 +252,21 @@ body.light-theme .moon-icon {
   overflow: hidden;
 }
 
-/* Sidebar Panel Header */
+/* Sidebar Panel Pinned Header (Matching Frame Calculator) */
 .sidebar-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 10px;
+  padding: 10px 14px;
+  background: var(--bg-btn);
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .sidebar-panel-header {
+  background: #e2e8f0;
+  border-bottom: 1px solid #cbd5e1;
 }
 
 .sidebar-panel-title {
@@ -362,54 +361,84 @@ body.light-theme .moon-icon {
   box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);
 }
 
-/* Left Panel Custom Scrollbar - High Visibility */
-.left-panel::-webkit-scrollbar {
-  width: 10px; /* Highly visible scroller width */
-  display: block !important;
-}
-.left-panel::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 5px;
-  margin: 6px 0;
-}
-.left-panel::-webkit-scrollbar-thumb {
-  background-color: var(--accent-primary); /* Vibrant solid accent thumb */
-  border-radius: 5px;
-  border: 2px solid rgba(15, 22, 38, 0.9);
-  background-clip: padding-box;
-  transition: background-color 0.2s;
-}
-.left-panel::-webkit-scrollbar-thumb:hover {
-  background-color: var(--accent-primary-hover);
-}
-
-/* Light Theme Scrollbar for Left Panel */
-body.light-theme .left-panel {
-  scrollbar-color: var(--accent-primary) rgba(0, 0, 0, 0.1);
-}
-body.light-theme .left-panel::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.08);
-}
-body.light-theme .left-panel::-webkit-scrollbar-thumb {
-  background-color: var(--accent-primary);
-  border: 2px solid rgba(255, 255, 255, 0.9);
-}
-body.light-theme .left-panel::-webkit-scrollbar-thumb:hover {
-  background-color: var(--accent-primary-hover);
-}
-
-.control-group {
+/* Scrollable Sidebar Panel with visible, easy-to-use scrollbar matching Frame Calculator */
+.sidebar-scroll {
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  padding: 12px 10px 70px 10px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+/* Custom Scrollbar for Left Panel (Frame Calculator design) */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 4px;
+  margin: 4px 0;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  transition: background 0.2s;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Dark Theme Scrollbar */
+body.dark-theme .sidebar-scroll,
+body:not(.light-theme) .sidebar-scroll {
+  scrollbar-color: rgba(255, 255, 255, 0.25) rgba(15, 22, 38, 0.6);
+}
+body.dark-theme .sidebar-scroll::-webkit-scrollbar-track,
+body:not(.light-theme) .sidebar-scroll::-webkit-scrollbar-track {
+  background: rgba(15, 22, 38, 0.6);
+}
+body.dark-theme .sidebar-scroll::-webkit-scrollbar-thumb,
+body:not(.light-theme) .sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+body.dark-theme .sidebar-scroll::-webkit-scrollbar-thumb:hover,
+body:not(.light-theme) .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* Section Card Containers */
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  padding: 10px 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+}
+
+body.light-theme .control-group {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
 }
 
 .control-group h3 {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--text-secondary);
+  letter-spacing: 0.8px;
+  color: var(--text-main);
   font-weight: 700;
 }
 
@@ -664,87 +693,187 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* Vertices Accordion lists */
 .coords-group {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .accordion {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow-y: auto;
-  flex: 1;
 }
 
 .accordion-item {
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border-radius: 6px;
   background-color: var(--bg-card);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
+body.light-theme .accordion-item {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
 .accordion-header {
-  padding: 10px 14px;
-  font-weight: 600;
-  font-size: 12.5px;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
   background-color: var(--bg-btn);
-  border-bottom: 1px solid var(--border-btn);
+  border-bottom: 1px solid transparent;
   color: var(--text-btn);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.15s ease;
+}
+
+body.light-theme .accordion-header {
+  background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
 }
 
 .accordion-header:hover {
   background-color: var(--bg-btn-hover);
-  color: var(--text-btn);
+}
+
+body.light-theme .accordion-header:hover {
+  background: #e2e8f0;
 }
 
 .accordion-item.expanded .accordion-header {
-  border-bottom-color: var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.light-theme .accordion-item.expanded .accordion-header {
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .coords-count {
   font-family: var(--font-display);
   font-size: 11px;
-  background-color: rgba(255, 255, 255, 0.07);
+  background-color: rgba(0, 0, 0, 0.08);
   padding: 2px 6px;
   border-radius: 4px;
   color: var(--text-secondary);
 }
 
+body.dark-theme .coords-count,
+body:not(.light-theme) .coords-count {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
 .accordion-content {
   display: none;
-  max-height: 200px;
-  overflow-y: auto;
 }
 
 .accordion-item.expanded .accordion-content {
   display: block;
 }
 
+/* Inner Coordinate List Scroll Container (Max 5 points visible before scrolling) */
 .coords-list {
   list-style: none;
+  max-height: 170px; /* Fits exactly ~5 coordinate rows (34px each) */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+#holes-container {
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+.hole-section .coords-list {
+  max-height: 136px; /* ~4-5 points inside each hole */
+  overflow-y: auto;
+}
+
+/* WebKit Custom Scrollbars for inner coordinate lists */
+.coords-list::-webkit-scrollbar,
+#holes-container::-webkit-scrollbar {
+  width: 6px;
+}
+.coords-list::-webkit-scrollbar-track,
+#holes-container::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+.coords-list::-webkit-scrollbar-thumb,
+#holes-container::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+}
+.coords-list::-webkit-scrollbar-thumb:hover,
+#holes-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Dark theme inner scrollbars */
+body.dark-theme .coords-list,
+body.dark-theme #holes-container,
+body:not(.light-theme) .coords-list,
+body:not(.light-theme) #holes-container {
+  scrollbar-color: rgba(255, 255, 255, 0.25) rgba(15, 22, 38, 0.6);
+}
+body.dark-theme .coords-list::-webkit-scrollbar-track,
+body.dark-theme #holes-container::-webkit-scrollbar-track,
+body:not(.light-theme) .coords-list::-webkit-scrollbar-track,
+body:not(.light-theme) #holes-container::-webkit-scrollbar-track {
+  background: rgba(15, 22, 38, 0.6);
+}
+body.dark-theme .coords-list::-webkit-scrollbar-thumb,
+body.dark-theme #holes-container::-webkit-scrollbar-thumb,
+body:not(.light-theme) .coords-list::-webkit-scrollbar-thumb,
+body:not(.light-theme) #holes-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+body.dark-theme .coords-list::-webkit-scrollbar-thumb:hover,
+body.dark-theme #holes-container::-webkit-scrollbar-thumb:hover,
+body:not(.light-theme) .coords-list::-webkit-scrollbar-thumb:hover,
+body:not(.light-theme) #holes-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .coords-list li {
-  padding: 8px 16px;
+  padding: 7px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-family: var(--font-display);
   font-size: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.15s ease;
+}
+
+body.light-theme .coords-list li {
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .coords-list li:last-child {
   border-bottom: none;
+}
+
+.coords-list li:hover {
+  background-color: var(--bg-card-hover);
+}
+
+body.light-theme .coords-list li:hover {
+  background-color: #f8fafc;
 }
 
 .coord-text {
@@ -786,9 +915,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px 4px 16px;
+  padding: 8px 12px 4px 12px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--accent-warn);
 }
 
@@ -2122,11 +2251,8 @@ body:not(.light-theme) .btn-canvas-action.btn-draw-node.active {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
     box-shadow: 8px 0 30px rgba(0, 0, 0, 0.6);
     border-right: 1px solid var(--border-color);
-    overflow-y: scroll !important;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-    padding-bottom: 60px !important;
+    padding: 0;
+    overflow: hidden;
   }
 
   /* When the user manually clicks the Fold button on mobile */

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=4.2">
+  <link rel="stylesheet" href="style.css?v=4.8">
 </head>
 <body class="light-theme">
   <div class="app-container">
@@ -60,116 +60,117 @@
           </button>
         </div>
 
-        <!-- Preset Templates -->
-        <section class="control-group">
-          <h3 data-i18n="presets.title">Preset Templates</h3>
-          <div class="preset-grid">
-            <button class="btn btn-preset" id="preset-rect" data-i18n="preset.rect">Rectangle</button>
-            <button class="btn btn-preset" id="preset-hollow-rect" data-i18n="preset.hollowRect">Box Section</button>
-            <button class="btn btn-preset" id="preset-i-beam" data-i18n="preset.iBeam">I-Beam</button>
-            <button class="btn btn-preset" id="preset-t-beam" data-i18n="preset.tBeam">T-Beam</button>
-            <button class="btn btn-preset" id="preset-circular" data-i18n="preset.circular">Circular Tube</button>
-            <button class="btn btn-preset" id="preset-l-angle" data-i18n="preset.lAngle">L-Angle</button>
-          </div>
-        </section>
-
-        <!-- Drawing Modes -->
-        <section class="control-group">
-          <h3 data-i18n="tools.title">Drawing Tools</h3>
-          <div class="tool-row">
-            <button class="btn btn-tool active" id="tool-draw-outer">
-              <span class="indicator outer-dot"></span> <span data-i18n="tool.outerShape">Outer Shape</span>
-            </button>
-            <button class="btn btn-tool" id="tool-draw-hole" disabled>
-              <span class="indicator hole-dot"></span> <span data-i18n="tool.addHole">Add Hole</span>
-            </button>
-          </div>
-          
-          <!-- Manual Coordinate Inputs -->
-          <div class="manual-input-container">
-            <div class="manual-input-label" data-i18n="tools.manualLabel">Manually Add Coordinate:</div>
-            <div class="manual-input-row">
-              <input type="number" id="input-manual-x" placeholder="X" step="any">
-              <input type="number" id="input-manual-y" placeholder="Y" step="any">
-              <button class="btn btn-small" id="btn-add-manual" title="Add Point (Enter)" data-i18n="tools.add" data-i18n-title="tip.addPoint">Add</button>
+        <!-- Scrollable Sidebar Panel (Matching Frame Calculator) -->
+        <div class="sidebar-scroll" id="sidebar-scroll">
+          <!-- Preset Templates -->
+          <section class="control-group">
+            <h3 data-i18n="presets.title">Preset Templates</h3>
+            <div class="preset-grid">
+              <button class="btn btn-preset" id="preset-rect" data-i18n="preset.rect">Rectangle</button>
+              <button class="btn btn-preset" id="preset-hollow-rect" data-i18n="preset.hollowRect">Box Section</button>
+              <button class="btn btn-preset" id="preset-i-beam" data-i18n="preset.iBeam">I-Beam</button>
+              <button class="btn btn-preset" id="preset-t-beam" data-i18n="preset.tBeam">T-Beam</button>
+              <button class="btn btn-preset" id="preset-circular" data-i18n="preset.circular">Circular Tube</button>
+              <button class="btn btn-preset" id="preset-l-angle" data-i18n="preset.lAngle">L-Angle</button>
             </div>
-            <button class="btn btn-small btn-primary" id="btn-close-loop" style="margin-top: 6px; width: 100%;" disabled data-i18n="tools.closeLoop">
-              Close Current Loop
-            </button>
-          </div>
-        </section>
+          </section>
 
-
-
-        <!-- Visualization Toggle Group Accordion -->
-        <section class="control-group">
-          <div class="accordion">
-            <div class="accordion-item">
-              <div class="accordion-header" data-i18n="viz.title">
-                Visualization Items
-              </div>
-              <div class="accordion-content">
-                <div class="toggle-list" style="padding-top: 10px;">
-                  <label class="toggle-item">
-                    <input type="checkbox" id="toggle-centroid" checked>
-                    <span class="checkbox-custom"></span>
-                    <span data-i18n="viz.centroid">Centroid (C)</span>
-                  </label>
-                  <label class="toggle-item">
-                    <input type="checkbox" id="toggle-principal" checked>
-                    <span class="checkbox-custom"></span>
-                    <span data-i18n="viz.principalAxes">Principal Axes (1-2)</span>
-                  </label>
-                  <label class="toggle-item">
-                    <input type="checkbox" id="toggle-ena">
-                    <span class="checkbox-custom"></span>
-                    <span data-i18n="viz.ena">Elastic Neutral Axis (ENA)</span>
-                  </label>
-                  <label class="toggle-item">
-                    <input type="checkbox" id="toggle-pna">
-                    <span class="checkbox-custom"></span>
-                    <span data-i18n="viz.pna">Plastic Neutral Axis (PNA)</span>
-                  </label>
-                  <label class="toggle-item">
-                    <input type="checkbox" id="toggle-kern">
-                    <span class="checkbox-custom"></span>
-                    <span data-i18n="viz.kern">Cross-Section Core (Kern)</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Coordinate Lists -->
-        <section class="control-group coords-group">
-          <h3 data-i18n="coords.title">Shape Vertices</h3>
-          <div class="accordion">
-            <div class="accordion-item expanded">
-              <div class="accordion-header" id="header-outer-coords">
-                <span data-i18n="coords.outerBoundary">Outer Boundary</span>
-                <span class="coords-count" id="count-outer">0 pts</span>
-              </div>
-              <div class="accordion-content">
-                <ul class="coords-list" id="list-outer-coords">
-                  <li class="empty-list-msg" data-i18n="coords.emptyOuter">Click on the grid to add points</li>
-                </ul>
-              </div>
+          <!-- Drawing Modes -->
+          <section class="control-group">
+            <h3 data-i18n="tools.title">Drawing Tools</h3>
+            <div class="tool-row">
+              <button class="btn btn-tool active" id="tool-draw-outer">
+                <span class="indicator outer-dot"></span> <span data-i18n="tool.outerShape">Outer Shape</span>
+              </button>
+              <button class="btn btn-tool" id="tool-draw-hole" disabled>
+                <span class="indicator hole-dot"></span> <span data-i18n="tool.addHole">Add Hole</span>
+              </button>
             </div>
             
-            <div class="accordion-item" id="accordion-holes">
-              <div class="accordion-header">
-                <span data-i18n="coords.holes">Holes</span>
-                <span class="coords-count" id="count-holes">0 holes</span>
+            <!-- Manual Coordinate Inputs -->
+            <div class="manual-input-container">
+              <div class="manual-input-label" data-i18n="tools.manualLabel">Manually Add Coordinate:</div>
+              <div class="manual-input-row">
+                <input type="number" id="input-manual-x" placeholder="X" step="any">
+                <input type="number" id="input-manual-y" placeholder="Y" step="any">
+                <button class="btn btn-small" id="btn-add-manual" title="Add Point (Enter)" data-i18n="tools.add" data-i18n-title="tip.addPoint">Add</button>
               </div>
-              <div class="accordion-content">
-                <div id="holes-container">
-                  <div class="empty-list-msg" data-i18n="coords.emptyHoles">No holes added yet</div>
+              <button class="btn btn-small btn-primary" id="btn-close-loop" style="margin-top: 6px; width: 100%;" disabled data-i18n="tools.closeLoop">
+                Close Current Loop
+              </button>
+            </div>
+          </section>
+
+          <!-- Visualization Toggle Group Accordion -->
+          <section class="control-group">
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-header" data-i18n="viz.title">
+                  Visualization Items
+                </div>
+                <div class="accordion-content">
+                  <div class="toggle-list" style="padding-top: 10px;">
+                    <label class="toggle-item">
+                      <input type="checkbox" id="toggle-centroid" checked>
+                      <span class="checkbox-custom"></span>
+                      <span data-i18n="viz.centroid">Centroid (C)</span>
+                    </label>
+                    <label class="toggle-item">
+                      <input type="checkbox" id="toggle-principal" checked>
+                      <span class="checkbox-custom"></span>
+                      <span data-i18n="viz.principalAxes">Principal Axes (1-2)</span>
+                    </label>
+                    <label class="toggle-item">
+                      <input type="checkbox" id="toggle-ena">
+                      <span class="checkbox-custom"></span>
+                      <span data-i18n="viz.ena">Elastic Neutral Axis (ENA)</span>
+                    </label>
+                    <label class="toggle-item">
+                      <input type="checkbox" id="toggle-pna">
+                      <span class="checkbox-custom"></span>
+                      <span data-i18n="viz.pna">Plastic Neutral Axis (PNA)</span>
+                    </label>
+                    <label class="toggle-item">
+                      <input type="checkbox" id="toggle-kern">
+                      <span class="checkbox-custom"></span>
+                      <span data-i18n="viz.kern">Cross-Section Core (Kern)</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+
+          <!-- Coordinate Lists -->
+          <section class="control-group coords-group">
+            <h3 data-i18n="coords.title">Shape Vertices</h3>
+            <div class="accordion">
+              <div class="accordion-item expanded">
+                <div class="accordion-header" id="header-outer-coords">
+                  <span data-i18n="coords.outerBoundary">Outer Boundary</span>
+                  <span class="coords-count" id="count-outer">0 pts</span>
+                </div>
+                <div class="accordion-content">
+                  <ul class="coords-list" id="list-outer-coords">
+                    <li class="empty-list-msg" data-i18n="coords.emptyOuter">Click on the grid to add points</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="accordion-item" id="accordion-holes">
+                <div class="accordion-header">
+                  <span data-i18n="coords.holes">Holes</span>
+                  <span class="coords-count" id="count-holes">0 holes</span>
+                </div>
+                <div class="accordion-content">
+                  <div id="holes-container">
+                    <div class="empty-list-msg" data-i18n="coords.emptyHoles">No holes added yet</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </aside>
 
       <!-- Mobile Sidebar Backdrop Overlay -->
