@@ -85,6 +85,157 @@ body {
   flex-direction: column;
   height: 100vh;
   width: 100vw;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ========================================== */
+/* STRUCTLAB UNIVERSAL TOP BAR               */
+/* ========================================== */
+.structlab-universal-bar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  color: #475569;
+  position: relative;
+  z-index: 1000;
+  flex-shrink: 0;
+  height: 34px;
+  box-sizing: border-box;
+}
+
+body.dark-theme .structlab-universal-bar,
+body:not(.light-theme) .structlab-universal-bar {
+  background: rgba(13, 19, 33, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+.structlab-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.structlab-logo-link {
+  color: #0f172a;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  transition: opacity 0.2s ease;
+}
+
+body.dark-theme .structlab-logo-link,
+body:not(.light-theme) .structlab-logo-link {
+  color: #f8fafc;
+}
+
+.structlab-logo-link:hover {
+  opacity: 0.85;
+}
+
+.structlab-logo-icon {
+  font-size: 14px;
+}
+
+.structlab-logo-tech {
+  color: #4f46e5;
+}
+
+body.dark-theme .structlab-logo-tech,
+body:not(.light-theme) .structlab-logo-tech {
+  color: #818cf8;
+}
+
+.structlab-bar-divider {
+  color: #cbd5e1;
+}
+
+body.dark-theme .structlab-bar-divider,
+body:not(.light-theme) .structlab-bar-divider {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.structlab-nav {
+  display: flex;
+  gap: 14px;
+}
+
+.structlab-nav-link {
+  color: #475569;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 2px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+body.dark-theme .structlab-nav-link,
+body:not(.light-theme) .structlab-nav-link {
+  color: #94a3b8;
+}
+
+.structlab-nav-link.link-beam:hover { color: #4f46e5; }
+.structlab-nav-link.link-frame:hover { color: #0284c7; }
+.structlab-nav-link.link-section:hover { color: #059669; }
+.structlab-nav-link.link-stress:hover { color: #d97706; }
+
+body.dark-theme .structlab-nav-link.link-beam:hover { color: #818cf8; }
+body.dark-theme .structlab-nav-link.link-frame:hover { color: #38bdf8; }
+body.dark-theme .structlab-nav-link.link-section:hover { color: #34d399; }
+body.dark-theme .structlab-nav-link.link-stress:hover { color: #fbbf24; }
+
+.structlab-nav-link.active {
+  color: #059669;
+  font-weight: 700;
+  border-bottom: 2px solid #059669;
+  padding-bottom: 1px;
+}
+
+body.dark-theme .structlab-nav-link.active,
+body:not(.light-theme) .structlab-nav-link.active {
+  color: #34d399;
+  border-bottom: 2px solid #34d399;
+}
+
+.structlab-bar-right {
+  display: flex;
+  align-items: center;
+}
+
+.structlab-hub-link {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.structlab-hub-link:hover {
+  color: #0f172a;
+}
+
+body.dark-theme .structlab-hub-link,
+body:not(.light-theme) .structlab-hub-link {
+  color: #94a3b8;
+}
+
+body.dark-theme .structlab-hub-link:hover,
+body:not(.light-theme) .structlab-hub-link:hover {
+  color: #f8fafc;
 }
 
 /* Header */
@@ -98,6 +249,7 @@ body {
   border-bottom: 1px solid var(--border-color);
   backdrop-filter: blur(var(--blur-val));
   z-index: 100;
+  flex-shrink: 0;
 }
 
 .header-left {
@@ -214,10 +366,10 @@ body.light-theme .moon-icon {
   display: grid;
   grid-template-columns: 290px 1fr;
   grid-template-rows: 100%;
-  flex: 1;
+  flex: 1 1 0%;
   overflow: hidden;
-  height: calc(100vh - 60px);
-  max-height: calc(100vh - 60px);
+  height: calc(100vh - 60px - 34px);
+  max-height: calc(100vh - 60px - 34px);
   min-height: 0;
   transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -2228,7 +2380,7 @@ body:not(.light-theme) .btn-canvas-action.btn-draw-node.active {
   .app-main-grid {
     display: block;
     position: relative;
-    height: calc(100vh - 54px);
+    height: calc(100vh - 54px - 34px);
   }
 
   .canvas-and-results {
@@ -2238,11 +2390,11 @@ body:not(.light-theme) .btn-canvas-action.btn-draw-node.active {
 
   .left-panel {
     position: fixed;
-    top: 54px;
+    top: calc(54px + 34px);
     left: 0;
     bottom: 0;
-    height: calc(100vh - 54px) !important;
-    max-height: calc(100vh - 54px) !important;
+    height: calc(100vh - 54px - 34px) !important;
+    max-height: calc(100vh - 54px - 34px) !important;
     min-height: 0;
     width: 320px;
     max-width: 88vw;
@@ -2266,7 +2418,7 @@ body:not(.light-theme) .btn-canvas-action.btn-draw-node.active {
   .sidebar-backdrop {
     display: block;
     position: fixed;
-    top: 54px;
+    top: calc(54px + 34px);
     left: 0;
     right: 0;
     bottom: 0;

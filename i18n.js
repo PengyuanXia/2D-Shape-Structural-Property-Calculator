@@ -12,6 +12,7 @@ const translations = {
     // Page title
     'page.title': 'SecCalc // 2D Section Property Calculator',
     'header.subtitle': '2D Shape Structural Property Calculator',
+    'header.backToHub': '← Back to Hub',
 
     // Sidebar
     'sidebar.title': 'Controls & Presets',
@@ -252,6 +253,7 @@ const translations = {
     // Page title
     'page.title': 'SecCalc // Kalkulator właściwości przekroju 2D',
     'header.subtitle': 'Kalkulator właściwości przekroju 2D',
+    'header.backToHub': '← Powrót do Hub',
 
     // Sidebar
     'sidebar.title': 'Sterowanie i szablony',
