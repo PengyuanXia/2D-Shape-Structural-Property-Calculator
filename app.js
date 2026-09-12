@@ -734,9 +734,9 @@ function calculateSectionModuli(composite, bendingAngleDeg = 0) {
   }
 
   const angleRad = (bendingAngleDeg * Math.PI) / 180;
-  const jBending = Math.max(0, composite.ix * Math.pow(Math.cos(angleRad), 2) +
-                              composite.iy * Math.pow(Math.sin(angleRad), 2) -
-                              2 * composite.ixy * Math.sin(angleRad) * Math.cos(angleRad));
+  const jBending = Math.max(0, composite.ix_c * Math.pow(Math.cos(angleRad), 2) +
+                              composite.iy_c * Math.pow(Math.sin(angleRad), 2) -
+                              2 * composite.ixy_c * Math.sin(angleRad) * Math.cos(angleRad));
 
   const wel = maxFiberDist > 1e-6 ? (jBending / maxFiberDist) : 0;
 
