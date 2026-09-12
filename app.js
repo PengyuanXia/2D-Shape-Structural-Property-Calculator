@@ -2115,6 +2115,15 @@ function openPresetModal(shapeKey) {
   });
 
   presetModal.style.display = 'flex';
+
+  // Automatically focus and select the first input field for immediate typing or Enter confirmation
+  setTimeout(() => {
+    const firstInput = presetFieldsContainer.querySelector('input');
+    if (firstInput) {
+      firstInput.focus();
+      firstInput.select();
+    }
+  }, 50);
 }
 
 function closePresetModal() {
@@ -2126,14 +2135,6 @@ function closePresetModal() {
 
 if (btnClosePresetModal) {
   btnClosePresetModal.addEventListener('click', closePresetModal);
-}
-
-if (presetModal) {
-  presetModal.addEventListener('click', (e) => {
-    if (e.target === presetModal) {
-      closePresetModal();
-    }
-  });
 }
 
 if (btnPresetDefault) {
@@ -2185,10 +2186,33 @@ function init() {
 // Fire initialization
 init();
 
-// Close Modal on Escape
+// Global Keyboard Modal Handlers (Preset Modal: ESC to cancel, Enter to confirm)
 window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closePresetModal();
+  if (presetModal && presetModal.style.display === 'flex') {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      e.preventDefault();
+      closePresetModal();
+      return;
+    }
+    if (e.key === 'Enter') {
+      // If a button is focused (e.g. Use Default Dimensions or close button), allow native click
+      if (document.activeElement === btnPresetDefault || document.activeElement === btnClosePresetModal) {
+        return;
+      }
+      e.preventDefault();
+      if (presetCustomForm) {
+        if (typeof presetCustomForm.requestSubmit === 'function') {
+          presetCustomForm.requestSubmit();
+        } else {
+          presetCustomForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        }
+      }
+      return;
+    }
+  }
+
+  // Other Modals Escape handler
+  if (e.key === 'Escape' || e.key === 'Esc') {
     closeManualModal();
     if (typeof closeContactModal === 'function') closeContactModal();
   }
