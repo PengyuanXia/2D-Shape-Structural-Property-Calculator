@@ -1789,6 +1789,30 @@ body.light-theme .canvas-toolbar .btn-results-toggle:hover {
   background: var(--bg-btn-hover);
 }
 
+/* Standard Toggle Button (EU / US) */
+.btn-standard-toggle {
+  background: var(--bg-btn);
+  border: 1px solid var(--border-btn);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--text-btn);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.btn-standard-toggle:hover {
+  transform: scale(1.05);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  background: var(--bg-btn-hover);
+}
+
 /* Header Actions */
 .header-actions {
   display: flex;
@@ -2373,6 +2397,11 @@ body:not(.light-theme) .btn-canvas-action.btn-draw-node.active {
   }
 
   .coffee-link {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .btn-standard-toggle {
     padding: 4px 8px;
     font-size: 11px;
   }

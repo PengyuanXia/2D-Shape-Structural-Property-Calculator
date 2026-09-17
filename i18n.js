@@ -80,6 +80,14 @@ const translations = {
     'hud.reverseY': 'Reverse Y (+ Up)',
     'hud.refAxes': 'Reference Axes',
     'hud.refAxesNote': 'Note: J<sub>x</sub> & J<sub>y</sub> are derived about the reference axes x=0, y=0 (aligned with top fiber).',
+    'hud.refAxesNote.us': 'Note: I<sub>x</sub> & I<sub>y</sub> are derived about the reference axes x=0, y=0 (aligned with top fiber).',
+
+    // Standard Toggle & Toasts
+    'standard.eu': 'EU (J, W)',
+    'standard.us': 'US (I, S)',
+    'tip.standardToggle': 'Switch Standard (EU: J, W / US: I, S, Z)',
+    'toast.standardEU': 'Switched to EU Standard (J, W)',
+    'toast.standardUS': 'Switched to US / AISC Standard (I, S, Z)',
 
     // Result cards — labels & folding
     'results.title': 'Section Properties',
@@ -91,13 +99,20 @@ const translations = {
     'result.area.label': 'Area (A)',
     'result.centroid.label': 'Centroid (X, Y)',
     'result.ix.label': 'Moment of Inertia (J<sub>x</sub>)',
+    'result.ix.label.us': 'Moment of Inertia (I<sub>x</sub>)',
     'result.iy.label': 'Moment of Inertia (J<sub>y</sub>)',
+    'result.iy.label.us': 'Moment of Inertia (I<sub>y</sub>)',
     'result.ixy.label': 'Product of Inertia (J<sub>xy</sub>)',
+    'result.ixy.label.us': 'Product of Inertia (I<sub>xy</sub>)',
     'result.theta.label': 'Principal Angle (θ<sub>p</sub>)',
     'result.i1.label': 'Max Principal Moment (J<sub>1</sub>)',
+    'result.i1.label.us': 'Max Principal Moment (I<sub>1</sub>)',
     'result.i2.label': 'Min Principal Moment (J<sub>2</sub>)',
+    'result.i2.label.us': 'Min Principal Moment (I<sub>2</sub>)',
     'result.wel.label': 'Elastic Section Modulus (W<sub>el</sub>)',
+    'result.wel.label.us': 'Elastic Section Modulus (S<sub>el</sub>)',
     'result.wpl.label': 'Plastic Section Modulus (W<sub>pl</sub>)',
+    'result.wpl.label.us': 'Plastic Section Modulus (Z<sub>pl</sub>)',
 
     // Result cards — descriptions
     'result.area.desc': 'Net area of the cross section',
@@ -246,6 +261,19 @@ const translations = {
         <tr><td><strong>Kern</strong></td><td>Cross-section core — region where load application produces no tension.</td></tr>
       </table>
     `,
+    'manual.results.content.us': `
+      <table>
+        <tr><td><strong>Area (A)</strong></td><td>Net cross-sectional area (outer minus holes).</td></tr>
+        <tr><td><strong>Centroid (X, Y)</strong></td><td>Coordinates of the geometric center of mass.</td></tr>
+        <tr><td><strong>I<sub>x</sub>, I<sub>y</sub></strong></td><td>Moments of inertia about centroidal axes — measure of bending resistance.</td></tr>
+        <tr><td><strong>I<sub>xy</sub></strong></td><td>Product of inertia — indicates section asymmetry. Zero for symmetric shapes.</td></tr>
+        <tr><td><strong>θ<sub>p</sub></strong></td><td>Principal angle — rotation from reference axes to principal axes.</td></tr>
+        <tr><td><strong>I<sub>1</sub>, I<sub>2</sub></strong></td><td>Maximum and minimum principal moments of inertia.</td></tr>
+        <tr><td><strong>S<sub>el</sub></strong></td><td>Elastic Section Modulus — measure of elastic bending resistance (Sel = I / z_max).</td></tr>
+        <tr><td><strong>Z<sub>pl</sub></strong></td><td>Plastic Section Modulus — measure of full plastic bending capacity (Zpl = S1 + S2).</td></tr>
+        <tr><td><strong>Kern</strong></td><td>Cross-section core — region where load application produces no tension.</td></tr>
+      </table>
+    `,
     'manual.close': 'Close',
   },
 
@@ -321,6 +349,14 @@ const translations = {
     'hud.reverseY': 'Odwróć Y (+ góra)',
     'hud.refAxes': 'Osie odniesienia',
     'hud.refAxesNote': 'Uwaga: J<sub>x</sub> i J<sub>y</sub> obliczone względem osi odniesienia x=0, y=0 (wyrównane z górnym włóknem).',
+    'hud.refAxesNote.us': 'Uwaga: I<sub>x</sub> i I<sub>y</sub> obliczone względem osi odniesienia x=0, y=0 (wyrównane z górnym włóknem).',
+
+    // Standard Toggle & Toasts
+    'standard.eu': 'EU (J, W)',
+    'standard.us': 'US (I, S)',
+    'tip.standardToggle': 'Zmień system oznaczeń (EU: J, W / US: I, S, Z)',
+    'toast.standardEU': 'Przełączono na normę EU (J, W)',
+    'toast.standardUS': 'Przełączono na normę US / AISC (I, S, Z)',
 
     // Result cards — labels & folding
     'results.title': 'Właściwości przekroju',
@@ -332,13 +368,20 @@ const translations = {
     'result.area.label': 'Pole przekroju (A)',
     'result.centroid.label': 'Środek ciężkości (X, Y)',
     'result.ix.label': 'Moment bezwładności (J<sub>x</sub>)',
+    'result.ix.label.us': 'Moment bezwładności (I<sub>x</sub>)',
     'result.iy.label': 'Moment bezwładności (J<sub>y</sub>)',
+    'result.iy.label.us': 'Moment bezwładności (I<sub>y</sub>)',
     'result.ixy.label': 'Moment dewiacji (J<sub>xy</sub>)',
+    'result.ixy.label.us': 'Moment dewiacji (I<sub>xy</sub>)',
     'result.theta.label': 'Kąt główny (θ<sub>p</sub>)',
     'result.i1.label': 'Maks. moment główny (J<sub>1</sub>)',
+    'result.i1.label.us': 'Maks. moment główny (I<sub>1</sub>)',
     'result.i2.label': 'Min. moment główny (J<sub>2</sub>)',
+    'result.i2.label.us': 'Min. moment główny (I<sub>2</sub>)',
     'result.wel.label': 'Sprężysty wskaźnik wytrzymałości (W<sub>el</sub>)',
+    'result.wel.label.us': 'Sprężysty wskaźnik wytrzymałości (S<sub>el</sub>)',
     'result.wpl.label': 'Plastyczny wskaźnik wytrzymałości (W<sub>pl</sub>)',
+    'result.wpl.label.us': 'Plastyczny wskaźnik wytrzymałości (Z<sub>pl</sub>)',
 
     // Result cards — descriptions
     'result.area.desc': 'Pole netto przekroju poprzecznego',
@@ -487,20 +530,73 @@ const translations = {
         <tr><td><strong>Rdzeń</strong></td><td>Rdzeń przekroju — obszar, w którym przyłożenie obciążenia nie wywołuje rozciągania.</td></tr>
       </table>
     `,
+    'manual.results.content.us': `
+      <table>
+        <tr><td><strong>Pole przekroju (A)</strong></td><td>Pole netto przekroju poprzecznego (obrys minus otwory).</td></tr>
+        <tr><td><strong>Środek ciężkości (X, Y)</strong></td><td>Współrzędne geometrycznego środka masy.</td></tr>
+        <tr><td><strong>I<sub>x</sub>, I<sub>y</sub></strong></td><td>Momenty bezwładności względem osi centralnych — miara odporności na zginanie.</td></tr>
+        <tr><td><strong>I<sub>xy</sub></strong></td><td>Moment dewiacji — wskazuje asymetrię przekroju. Zerowy dla przekrojów symetrycznych.</td></tr>
+        <tr><td><strong>θ<sub>p</sub></strong></td><td>Kąt główny — obrót od osi odniesienia do osi głównych bezwładności.</td></tr>
+        <tr><td><strong>I<sub>1</sub>, I<sub>2</sub></strong></td><td>Maksymalny i minimalny główny moment bezwładności.</td></tr>
+        <tr><td><strong>S<sub>el</sub></strong></td><td>Sprężysty wskaźnik wytrzymałości na zginanie (Sel = I / z_max).</td></tr>
+        <tr><td><strong>Z<sub>pl</sub></strong></td><td>Plastyczny wskaźnik wytrzymałości na zginanie (Zpl = S1 + S2).</td></tr>
+        <tr><td><strong>Rdzeń</strong></td><td>Rdzeń przekroju — obszar, w którym przyłożenie obciążenia nie wywołuje rozciągania.</td></tr>
+      </table>
+    `,
     'manual.close': 'Zamknij',
   }
 };
 
 // --- HELPER FUNCTIONS ---
 
+// Current engineering standard state ('EU' or 'US')
+let currentStandard = (typeof localStorage !== 'undefined' && localStorage.getItem('seccalc_standard')) || 'EU';
+
+/**
+ * Returns the active engineering standard ('EU' or 'US')
+ */
+function getStandard() {
+  return currentStandard;
+}
+
+/**
+ * Sets the active engineering standard ('EU' or 'US') and stores in localStorage
+ */
+function setStandard(std) {
+  currentStandard = (std === 'US') ? 'US' : 'EU';
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('seccalc_standard', currentStandard);
+    }
+  } catch (e) {}
+}
+
+/**
+ * Applies a given engineering standard and triggers full UI re-translation
+ */
+function applyStandard(std) {
+  if (std) setStandard(std);
+  applyLanguage(currentLang);
+}
+
 /**
  * Returns the translated string for a given key in the current language.
+ * Checks for standard-specific overrides (e.g. '.us') when US standard is active.
  * Falls back to English, then returns the key itself if not found.
  */
 function t(key) {
-  return (translations[currentLang] && translations[currentLang][key])
-    || translations.en[key]
-    || key;
+  if (currentStandard === 'US') {
+    const usKey = key + '.us';
+    if (translations[currentLang] && translations[currentLang][usKey] !== undefined) {
+      return translations[currentLang][usKey];
+    }
+    if (translations.en && translations.en[usKey] !== undefined) {
+      return translations.en[usKey];
+    }
+  }
+  return (translations[currentLang] && translations[currentLang][key] !== undefined)
+    ? translations[currentLang][key]
+    : ((translations.en && translations.en[key] !== undefined) ? translations.en[key] : key);
 }
 
 /**
@@ -512,6 +608,11 @@ function t(key) {
  */
 function applyLanguage(lang) {
   currentLang = lang || currentLang;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('seccalc_lang', currentLang);
+    }
+  } catch (e) {}
 
   // Update HTML lang attribute
   document.documentElement.lang = currentLang === 'pl' ? 'pl' : 'en';
@@ -553,5 +654,11 @@ function applyLanguage(lang) {
   const langBtn = document.getElementById('btn-lang-toggle');
   if (langBtn) {
     langBtn.textContent = currentLang.toUpperCase();
+  }
+
+  // Update the standard toggle button text
+  const stdBtn = document.getElementById('btn-standard-toggle');
+  if (stdBtn) {
+    stdBtn.textContent = currentStandard === 'US' ? 'US (I, S)' : 'EU (J, W)';
   }
 }

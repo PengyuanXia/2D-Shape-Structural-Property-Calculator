@@ -30,9 +30,10 @@ const state = {
   dragStartX: 0,
   dragStartY: 0,
   
-  // Themes
+  // Themes & Localization
   theme: 'light',
-  lang: 'en',
+  lang: (typeof localStorage !== 'undefined' && localStorage.getItem('seccalc_lang')) || 'en',
+  standard: (typeof localStorage !== 'undefined' && localStorage.getItem('seccalc_standard')) || 'EU',
   welcomeDismissed: false
 };
 
@@ -2356,7 +2357,17 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// --- LANGUAGE TOGGLE ---
+// --- STANDARD & LANGUAGE TOGGLE ---
+const btnStandardToggle = document.getElementById('btn-standard-toggle');
+if (btnStandardToggle) {
+  btnStandardToggle.addEventListener('click', () => {
+    state.standard = state.standard === 'EU' ? 'US' : 'EU';
+    applyStandard(state.standard);
+    const msg = state.standard === 'US' ? t('toast.standardUS') : t('toast.standardEU');
+    showToast(msg);
+  });
+}
+
 const btnLangToggle = document.getElementById('btn-lang-toggle');
 if (btnLangToggle) {
   btnLangToggle.addEventListener('click', () => {
@@ -2607,6 +2618,7 @@ if (btnToggleResults) btnToggleResults.addEventListener('click', toggleResults);
 if (btnFoldResultsHeader) btnFoldResultsHeader.addEventListener('click', foldResults);
 
 // --- INITIAL STARTUP & VIEWPORT CONFIGURATION ---
+applyStandard(state.standard);
 applyLanguage(state.lang);
 resizeCanvas();
 setInitialViewport();
