@@ -281,10 +281,47 @@ body:not(.light-theme) .structlab-hub-link:hover {
   font-size: 14px;
   color: var(--text-secondary);
   font-weight: 400;
-  margin-right: auto;
   margin-left: 20px;
   padding-left: 20px;
   border-left: 1px solid var(--border-color);
+}
+
+.header-mission-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 14px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #b45309;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .header-mission-pill {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fcd34d;
+}
+
+.header-mission-pill:hover {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.5);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 992px) {
+  .header-mission-pill {
+    display: none;
+  }
+  .subtitle {
+    margin-right: auto;
+  }
 }
 
 .btn-icon {
